@@ -1,29 +1,26 @@
 import React, {Component} from 'react';
-import {Button, FormGroup, FormControl, ControlLabel,} from 'react-bootstrap';
+import {FormGroup, FormControl, ControlLabel,} from 'react-bootstrap';
 import './Login.css';
 import config from '../config.js';
 import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
 import {withRouter} from "react-router-dom";
+import LoaderButton from "../components/LoaderButton";
 
 class Login extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
+        this.setState({isLoading: true});
+
         try {
             const userToken = await this.login(this.state.username, this.state.password);
             this.props.updateUserToken(userToken);
             this.props.history.push('/');
-
         }
         catch (e) {
             alert(e);
+            this.setState({isLoading: false});
         }
-    };
-
-    handleChange = (event) => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
     };
 
     constructor(props) {
@@ -32,8 +29,17 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            isLoading: false,
         };
     }
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value
+        });
+    };
+
+
 
     validateForm() {
         return this.state.username.length > 0
@@ -80,13 +86,14 @@ class Login extends Component {
                             onChange={this.handleChange}
                             type="password"/>
                     </FormGroup>
-                    <Button
+                    <LoaderButton
                         block
                         bsSize="large"
                         disabled={!this.validateForm()}
-                        type="submit">
-                        Login
-                    </Button>
+                        type="submit"
+                        isLoading={this.state.isLoading}
+                        text="Login"
+                        loadingText="Logging in…"/>
                 </form>
             </div>
         );

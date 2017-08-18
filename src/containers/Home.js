@@ -52,7 +52,6 @@ class Home extends Component {
     }
 
     renderExercisesList(exercises) {
-        console.info('exercises = ' + JSON.stringify(exercises));
         return [{}].concat(exercises).map((exercise, i) => (
             i !== 0
                 ? ( <ListGroupItem

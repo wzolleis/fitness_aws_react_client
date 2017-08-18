@@ -6,6 +6,27 @@ import {ControlLabel, FormControl, FormGroup} from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 
 class Exercises extends Component {
+    handleDelete = async (event) => {
+        event.preventDefault();
+
+        const confirmed = window.confirm('Are you sure you want to delete this exercise?');
+
+        if (!confirmed) {
+            return;
+        }
+
+        this.setState({isDeleting: true});
+
+        try {
+            await this.deleteExercise();
+            this.props.history.push('/');
+        }
+        catch (e) {
+            alert(e);
+            this.setState({isDeleting: false});
+        }
+    }
+
     handleSubmit = async (event) => {
         let uploadedFilename;
 
@@ -46,6 +67,14 @@ class Exercises extends Component {
         this.file = event.target.files[0];
     };
 
+    saveExercise(exercise) {
+        return invokeApig({
+            path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
+            method: 'PUT',
+            body: exercise,
+        }, this.props.userToken);
+    }
+
     constructor(props) {
         super(props);
 
@@ -60,26 +89,12 @@ class Exercises extends Component {
         };
     }
 
-    saveExercise(exercise) {
+    deleteExercise() {
         return invokeApig({
             path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
-            method: 'PUT',
-            body: exercise,
+            method: 'DELETE',
         }, this.props.userToken);
     }
-
-
-    handleDelete = async (event) => {
-        event.preventDefault();
-
-        const confirmed = window.confirm('Are you sure you want to delete this exercise?');
-
-        if (!confirmed) {
-            return;
-        }
-
-        this.setState({isDeleting: true});
-    };
 
     async componentDidMount() {
         try {

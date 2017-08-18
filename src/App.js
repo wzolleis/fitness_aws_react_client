@@ -10,6 +10,15 @@ import config from './config.js';
 import RouteNavItem from './components/RouteNavItem';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            userToken: null,
+            isLoadingUserToken: true,
+        };
+    }
+
     handleLogout = (event) => {
         const currentUser = this.getCurrentUser();
 
@@ -22,15 +31,6 @@ class App extends Component {
         this.updateUserToken(null);
         this.props.history.push('/login');
     };
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            userToken: null,
-            isLoadingUserToken: true,
-        };
-    }
 
     updateUserToken = (userToken) => {
         this.setState({

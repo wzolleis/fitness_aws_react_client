@@ -1,20 +1,14 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {invokeApig} from '../libs/awsLib';
+import {invokeApig, s3Upload} from '../libs/awsLib';
 import config from "../config";
 import {ControlLabel, FormControl, FormGroup} from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 
 class Exercises extends Component {
-    handleChange = (event) => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
-    };
-    handleFileChange = (event) => {
-        this.file = event.target.files[0];
-    };
     handleSubmit = async (event) => {
+        let uploadedFilename;
+
         event.preventDefault();
 
         if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
@@ -23,7 +17,58 @@ class Exercises extends Component {
         }
 
         this.setState({isLoading: true});
+
+        try {
+
+            if (this.file) {
+                uploadedFilename = (await s3Upload(this.file, this.props.userToken)).Location;
+            }
+
+            await this.saveExercise({
+                ...this.state.exercise,
+                content: this.state.content,
+                attachment: uploadedFilename || this.state.exercise.attachment,
+            });
+            this.props.history.push('/');
+        }
+        catch (e) {
+            alert(e);
+            this.setState({isLoading: false});
+        }
     };
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value
+        });
+    };
+    handleFileChange = (event) => {
+        this.file = event.target.files[0];
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.file = null;
+
+        this.state = {
+            isLoading: null,
+            isDeleting: null,
+            exercise: null,
+            attachment: null,
+            content: '',
+        };
+    }
+
+    saveExercise(exercise) {
+        return invokeApig({
+            path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
+            method: 'PUT',
+            body: exercise,
+        }, this.props.userToken);
+    }
+
+
     handleDelete = async (event) => {
         event.preventDefault();
 
@@ -36,25 +81,13 @@ class Exercises extends Component {
         this.setState({isDeleting: true});
     };
 
-    constructor(props) {
-        super(props);
-
-        this.file = null;
-
-        this.state = {
-            isLoading: null,
-            isDeleting: null,
-            exercise: null,
-            content: '',
-        };
-    }
-
     async componentDidMount() {
         try {
             const results = await this.getExercise();
             this.setState({
                 exercise: results,
                 content: results.content,
+                attachment: results.attachment
             });
         }
         catch (e) {

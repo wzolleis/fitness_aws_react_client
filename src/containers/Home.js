@@ -6,6 +6,14 @@ import config from "../config";
 import {invokeApig} from "../libs/awsLib";
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoading: false,
+            exercises: [],
+        };
+    }
 
     mapExerciseToString = (exercise) => {
         const txt = exercise.content.trim().split('\n')[0];
@@ -19,15 +27,6 @@ class Home extends Component {
             this.props.history.push(event.currentTarget.getAttribute('href'));
         }
     };
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isLoading: false,
-            exercises: [],
-        };
-    }
 
     async componentDidMount() {
         if (this.props.userToken === null) {

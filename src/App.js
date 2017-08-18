@@ -9,19 +9,14 @@ import config from './config.js';
 import RouteNavItem from './components/RouteNavItem';
 
 class App extends Component {
-
     handleLogout = (event) => {
-        this.updateUserToken(null);
-    };
+        const currentUser = this.getCurrentUser();
 
-    updateUserToken = (userToken) => {
-        this.setState({
-            userToken: userToken
-        });
-    };
-    handleNavLink = (event) => {
-        event.preventDefault();
-        this.props.history.push(event.currentTarget.getAttribute('href'));
+        if (currentUser !== null) {
+            currentUser.signOut();
+        }
+
+        this.updateUserToken(null);
     };
 
     constructor(props) {
@@ -32,6 +27,17 @@ class App extends Component {
             isLoadingUserToken: true,
         };
     }
+
+    updateUserToken = (userToken) => {
+        this.setState({
+            userToken: userToken
+        });
+    };
+
+    handleNavLink = (event) => {
+        event.preventDefault();
+        this.props.history.push(event.currentTarget.getAttribute('href'));
+    };
 
     getCurrentUser() {
         const userPool = new CognitoUserPool({

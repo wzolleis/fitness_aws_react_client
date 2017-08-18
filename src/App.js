@@ -22,6 +22,7 @@ class App extends Component {
                         </Navbar.Brand>
                         <Navbar.Toggle/>
                     </Navbar.Header>
+
                     <Navbar.Collapse>
                         <Nav pullRight>
                             <RouteNavItem onClick={this.handleNavLink} href="/signup">Signup</RouteNavItem>

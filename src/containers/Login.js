@@ -3,23 +3,27 @@ import {Button, FormGroup, FormControl, ControlLabel,} from 'react-bootstrap';
 import './Login.css';
 import config from '../config.js';
 import {CognitoUserPool, AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
+import {withRouter} from "react-router-dom";
 
 class Login extends Component {
-    handleChange = (event) => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
-    };
     handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
             const userToken = await this.login(this.state.username, this.state.password);
             this.props.updateUserToken(userToken);
+            this.props.history.push('/');
+
         }
         catch (e) {
             alert(e);
         }
+    };
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value
+        });
     };
 
     constructor(props) {
@@ -89,4 +93,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default withRouter(Login);

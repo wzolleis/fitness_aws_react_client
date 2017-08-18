@@ -8,7 +8,7 @@ import {
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
 import './NewExercise.css';
-import {invokeApig} from "../libs/awsLib";
+import {invokeApig, s3Upload} from "../libs/awsLib";
 
 class NewExercise extends Component {
     constructor(props) {
@@ -47,8 +47,13 @@ class NewExercise extends Component {
         this.setState({ isLoading: true });
 
         try {
+            const uploadedFilename = (this.file)
+                ? (await s3Upload(this.file, this.props.userToken)).Location
+                : null;
+
             await this.createExercise({
                 content: this.state.content,
+                attachment: uploadedFilename,
             });
             this.props.history.push('/');
         }
@@ -58,6 +63,7 @@ class NewExercise extends Component {
         }
 
     };
+
 
     createExercise(exercise) {
         return invokeApig({

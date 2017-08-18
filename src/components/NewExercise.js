@@ -8,6 +8,7 @@ import {
 import LoaderButton from '../components/LoaderButton';
 import config from '../config.js';
 import './NewExercise.css';
+import {invokeApig} from "../libs/awsLib";
 
 class NewExercise extends Component {
     constructor(props) {
@@ -29,11 +30,11 @@ class NewExercise extends Component {
         this.setState({
             [event.target.id]: event.target.value
         });
-    }
+    };
 
     handleFileChange = (event) => {
         this.file = event.target.files[0];
-    }
+    };
 
     handleSubmit = async (event) => {
         event.preventDefault();
@@ -44,6 +45,26 @@ class NewExercise extends Component {
         }
 
         this.setState({ isLoading: true });
+
+        try {
+            await this.createExercise({
+                content: this.state.content,
+            });
+            this.props.history.push('/');
+        }
+        catch (e) {
+            alert(e);
+            this.setState({isLoading: false});
+        }
+
+    };
+
+    createExercise(exercise) {
+        return invokeApig({
+            path: '/exercises',
+            method: 'POST',
+            body: exercise,
+        }, this.props.userToken);
     }
 
     render() {

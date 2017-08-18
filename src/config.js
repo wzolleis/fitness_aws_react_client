@@ -13,4 +13,7 @@ export default {
     s3: {
         EXERCISE_BUCKET: 'fit-exercise-images'
     },
+    apiPath: {
+        EXERCISES: '/exercises'
+    }
 };

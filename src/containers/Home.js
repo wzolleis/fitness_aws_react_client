@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {PageHeader, ListGroup, ListGroupItem,} from 'react-bootstrap';
 import './Home.css';
 import config from "../config";
@@ -71,8 +71,12 @@ class Home extends Component {
     renderLander() {
         return (
             <div className="lander">
-                <h1>Scratch</h1>
-                <p>A simple exercise taking app</p>
+                <h1>Fitness</h1>
+                <p>A simple exercise management app</p>
+                <div>
+                    <Link to="/login" className="btn btn-info btn-lg">Login</Link>
+                    <Link to="/signup" className="btn btn-success btn-lg">Signup</Link>
+                </div>
             </div>
         );
     }

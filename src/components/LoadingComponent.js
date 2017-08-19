@@ -1,3 +1,5 @@
+import React from 'react';
+
 const LoadingComponent = ({isLoading, error}) => {
     // Handle the loading state
     if (isLoading) {
@@ -11,3 +13,5 @@ const LoadingComponent = ({isLoading, error}) => {
         return null;
     }
 };
+
+export default LoadingComponent;

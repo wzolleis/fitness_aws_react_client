@@ -16,12 +16,9 @@ class Home extends Component {
     }
 
     mapExerciseToString = (exercise) => {
-        const txt = exercise.content.trim().split('\n')[0];
-        console.info('exercise = ' + txt);
-        return txt;
+        return exercise.name;
     };
     handleExerciseClick = (event) => {
-        console.info('event = ' + JSON.stringify(event));
         if (event) {
             event.preventDefault();
             this.props.history.push(event.currentTarget.getAttribute('href'));
@@ -68,7 +65,7 @@ class Home extends Component {
         ));
     }
 
-    renderLander() {
+    static renderLander() {
         return (
             <div className="lander">
                 <h1>Fitness</h1>
@@ -98,7 +95,7 @@ class Home extends Component {
         return (
             <div className="Home">
                 {this.props.userToken === null
-                    ? this.renderLander()
+                    ? Home.renderLander()
                     : this.renderExercises()}
             </div>
         );

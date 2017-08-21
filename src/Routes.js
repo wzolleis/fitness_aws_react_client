@@ -9,7 +9,7 @@ import LoadingComponent from './components/LoadingComponent'
 
 
 const AsyncLogin = asyncComponent(() => import('./containers/Login'));
-const AsyncExercises = asyncComponent(() => import('./containers/Exercises'));
+const AsyncExercises = asyncComponent(() => import('./containers/ExercisesForm'));
 const AsyncSignup = asyncComponent(() => import('./containers/Signup'));
 const AsyncNewExercise = asyncComponent(() => import('./containers/NewExercise'));
 const AsyncNotFound = asyncComponent(() => import('./containers/NotFound'));

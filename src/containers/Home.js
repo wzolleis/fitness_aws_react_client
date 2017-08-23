@@ -4,6 +4,7 @@ import {PageHeader, ListGroup, ListGroupItem,} from 'react-bootstrap';
 import './Home.css';
 import config from "../config";
 import {invokeApig} from "../libs/awsLib";
+import {exerciseLabel} from "../utils/FormUtils";
 
 class Home extends Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class Home extends Component {
     }
 
     mapExerciseToString = (exercise) => {
-        return exercise.name;
+        return exerciseLabel(exercise);
     };
     handleExerciseClick = (event) => {
         if (event) {

@@ -1,12 +1,26 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {invokeApig, s3Upload} from '../libs/awsLib';
+import {invokeApig} from '../libs/awsLib';
 import config from "../config";
-import {ControlLabel, FormControl, FormGroup} from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import {FieldGroup} from "../utils/FormUtils";
 
 class ExercisesForm extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoading: false,
+            isDeleting: false,
+            exercise: {
+                name: '',
+                muskelgruppe: '',
+                device: '',
+                type: ''
+            }
+        };
+    }
+
     handleDelete = async (event) => {
         event.preventDefault();
 
@@ -29,8 +43,6 @@ class ExercisesForm extends Component {
     };
 
     handleSubmit = async (event) => {
-        let uploadedFilename;
-
         event.preventDefault();
 
         if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
@@ -41,11 +53,6 @@ class ExercisesForm extends Component {
         this.setState({isLoading: true});
 
         try {
-
-            if (this.file) {
-                uploadedFilename = (await s3Upload(this.file, this.props.userToken)).Location;
-            }
-
             await this.saveExercise({
                 ...this.state.exercise,
             });
@@ -58,39 +65,15 @@ class ExercisesForm extends Component {
     };
 
     handleChange = (event) => {
-        let exercise = {
-            ...this.state.exercise,
-            [event.target.id]: event.target.value
-        };
-        this.setState(exercise);
-    };
-    handleFileChange = (event) => {
-        this.file = event.target.files[0];
-    };
-
-    constructor(props) {
-        super(props);
-
-        this.file = null;
-
-        this.state = {
-            isLoading: null,
-            isDeleting: null,
+        let state = {
+            ...this.state,
             exercise: {
-                attachment: null,
-                name: '',
-                type: '',
-                muskelgruppe: '',
-                device: ''
+                ...this.state.exercise,
+                [event.target.id]: event.target.value
             }
         };
-    }
-
-    static formatFilename(str) {
-        return (str.length < 50)
-            ? str
-            : str.substr(0, 20) + '...' + str.substr(str.length - 20, str.length);
-    }
+        this.setState(state);
+    };
 
     saveExercise(exercise) {
         return invokeApig({
@@ -138,7 +121,7 @@ class ExercisesForm extends Component {
                     <FieldGroup
                         id="name"
                         type="text"
-                        label="Text"
+                        label="Name"
                         value={this.state.exercise.name}
                         onChange={this.handleChange}
                     />
@@ -146,25 +129,16 @@ class ExercisesForm extends Component {
                         id="device"
                         type="text"
                         label="Gerät"
-                        placeholder="Gerätenummer"
+                        value={this.state.exercise.device}
                         onChange={this.handleChange}
                     />
-                    {this.state.exercise.attachment &&
-                    ( <FormGroup>
-                        <ControlLabel>Attachment</ControlLabel>
-                        <FormControl.Static>
-                            <a target="_blank" rel="noopener noreferrer" href={this.state.exercise.attachment}>
-                                {ExercisesForm.formatFilename(this.state.exercise.attachment)}
-                            </a>
-                        </FormControl.Static>
-                    </FormGroup> )}
-                    <FormGroup controlId="file">
-                        {!this.state.exercise.attachment &&
-                        <ControlLabel>Attachment</ControlLabel>}
-                        <FormControl
-                            onChange={this.handleFileChange}
-                            type="file"/>
-                    </FormGroup>
+                    <FieldGroup
+                        id="muskelgruppe"
+                        type="text"
+                        label="Muskelgruppe"
+                        value={this.state.exercise.muskelgruppe}
+                        onChange={this.handleChange}
+                    />
                     <LoaderButton
                         block
                         bsStyle="primary"

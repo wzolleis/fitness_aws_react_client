@@ -12,3 +12,7 @@ export function FieldGroup({id, label, help, ...props}) {
         </FormGroup>
     );
 }
+
+export function exerciseLabel(exercise) {
+    return exercise.device + ' - ' + exercise.name;
+}

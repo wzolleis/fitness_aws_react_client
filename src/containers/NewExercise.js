@@ -1,37 +1,20 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import {
-    FormGroup,
-    FormControl,
-    ControlLabel, HelpBlock,
-} from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
-import config from '../config.js';
 import './NewExercise.css';
-import {invokeApig, s3Upload} from "../libs/awsLib";
+import {invokeApig} from "../libs/awsLib";
 import {FieldGroup} from "../utils/FormUtils";
 
 class NewExercise extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-            alert('Please pick a file smaller than 5MB');
-            return;
-        }
-
         this.setState({ isLoading: true });
 
         try {
-            const uploadedFilename = (this.file)
-                ? (await s3Upload(this.file, this.props.userToken)).Location
-                : null;
-
             await this.createExercise({
-                content: this.state.content,
-                name: this.state.name,
-                device: this.state.device,
-                attachment: uploadedFilename,
+                name: this.state.exercise.name,
+                device: this.state.exercise.device,
             });
             this.props.history.push('/');
         }
@@ -45,26 +28,27 @@ class NewExercise extends Component {
     constructor(props) {
         super(props);
 
-        this.file = null;
-
         this.state = {
-            isLoading: null,
+            isLoading: false,
 
-            content: '',
             exercise: {
-                name: ''
+                name: '',
+                device: '',
+                muskelgruppe: '',
+                type: ''
             }
         };
     }
 
     handleChange = (event) => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
-    };
-
-    handleFileChange = (event) => {
-        this.file = event.target.files[0];
+        let state = {
+            ...this.state,
+            exercise: {
+                ...this.state.exercise,
+                [event.target.id]: event.target.value
+            }
+        };
+        this.setState(state);
     };
 
     validateForm() {
@@ -87,24 +71,24 @@ class NewExercise extends Component {
                     <FieldGroup
                         id="name"
                         type="text"
-                        label="Text"
-                        placeholder="Name"
+                        label="Name"
+                        value={this.state.exercise.name}
                         onChange={this.handleChange}
                     />
                     <FieldGroup
                         id="device"
                         type="text"
                         label="Gerät"
-                        placeholder="Gerätenummer"
+                        value={this.state.exercise.device}
                         onChange={this.handleChange}
                     />
-
-                    <FormGroup controlId="file">
-                        <ControlLabel>Attachment</ControlLabel>
-                        <FormControl
-                            onChange={this.handleFileChange}
-                            type="file" />
-                    </FormGroup>
+                    <FieldGroup
+                        id="muskelgruppe"
+                        type="text"
+                        label="Muskelgruppe"
+                        value={this.state.exercise.muskelgruppe}
+                        onChange={this.handleChange}
+                    />
                     <LoaderButton
                         block
                         bsStyle="primary"

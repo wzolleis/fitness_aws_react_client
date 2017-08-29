@@ -16,7 +16,7 @@ class ExercisesForm extends Component {
                 name: '',
                 muskelgruppe: '',
                 device: '',
-                type: ''
+                weight: ''
             }
         };
     }
@@ -137,6 +137,13 @@ class ExercisesForm extends Component {
                         type="text"
                         label="Muskelgruppe"
                         value={this.state.exercise.muskelgruppe}
+                        onChange={this.handleChange}
+                    />
+                    <FieldGroup
+                        id="weight"
+                        type="text"
+                        label="Gewicht"
+                        value={this.state.exercise.weight}
                         onChange={this.handleChange}
                     />
                     <LoaderButton

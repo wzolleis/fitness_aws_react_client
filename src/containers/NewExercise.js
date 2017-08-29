@@ -35,7 +35,7 @@ class NewExercise extends Component {
                 name: '',
                 device: '',
                 muskelgruppe: '',
-                type: ''
+                weight: ''
             }
         };
     }
@@ -87,6 +87,13 @@ class NewExercise extends Component {
                         type="text"
                         label="Muskelgruppe"
                         value={this.state.exercise.muskelgruppe}
+                        onChange={this.handleChange}
+                    />
+                    <FieldGroup
+                        id="weight"
+                        type="text"
+                        label="Gewicht"
+                        value={this.state.exercise.weight}
                         onChange={this.handleChange}
                     />
                     <LoaderButton

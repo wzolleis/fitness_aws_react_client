@@ -8,6 +8,8 @@ import {CognitoUserPool,} from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
 import config from './config.js';
 import RouteNavItem from './components/RouteNavItem';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 class App extends Component {
     constructor(props) {
@@ -116,4 +118,12 @@ class App extends Component {
     }
 }
 
-export default withRouter(App);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({}, dispatch);
+};
+
+function mapStateToProps(state) {
+    return {}
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

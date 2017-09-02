@@ -12,6 +12,7 @@ const AsyncLogin = asyncComponent(() => import('./containers/Login'));
 const AsyncExercises = asyncComponent(() => import('./containers/ExercisesForm'));
 const AsyncSignup = asyncComponent(() => import('./containers/Signup'));
 const AsyncNewExercise = asyncComponent(() => import('./containers/NewExercise'));
+const AsyncPlans = asyncComponent(() => import('./containers/VisiblePlanList'));
 const AsyncNotFound = asyncComponent(() => import('./containers/NotFound'));
 
 const AsyncHome = Loadable({
@@ -26,6 +27,8 @@ export default ({childProps}) => (
         <UnauthenticatedRoute path="/signup" exact component={AsyncSignup} props={childProps}/>
         <AuthenticatedRoute path="/exercises/new" exact component={AsyncNewExercise} props={childProps}/>
         <AuthenticatedRoute path="/exercises/:id" exact component={AsyncExercises} props={childProps}/>
+        <AuthenticatedRoute path="/plans" exact component={AsyncPlans} props={childProps}/>
         <Route component={AsyncNotFound}/>
     </Switch>
-);
+)
+;

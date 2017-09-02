@@ -14,6 +14,7 @@ export default {
         EXERCISE_BUCKET: 'fit-exercise-images'
     },
     apiPath: {
-        EXERCISES: '/exercises'
+        EXERCISES: '/exercises',
+        PLANS: '/plans'
     }
 };

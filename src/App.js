@@ -10,6 +10,7 @@ import config from './config.js';
 import RouteNavItem from './components/RouteNavItem';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import {fetchCurrentUser} from "./actions/UserActions";
 
 class App extends Component {
     constructor(props) {
@@ -46,6 +47,8 @@ class App extends Component {
     };
 
     getCurrentUser() {
+        this.props.executeFetchCurrentUser();
+
         const userPool = new CognitoUserPool({
             UserPoolId: config.cognito.USER_POOL_ID,
             ClientId: config.cognito.APP_CLIENT_ID
@@ -119,7 +122,9 @@ class App extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({
+        executeFetchCurrentUser: fetchCurrentUser
+    }, dispatch);
 };
 
 function mapStateToProps(state) {

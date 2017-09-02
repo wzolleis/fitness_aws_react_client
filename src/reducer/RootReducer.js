@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux'
 import {reducer as formReducer} from 'redux-form'
 import exerciseReducer from "./ExerciseReducer";
-import userReducer from "../actions/UserActions";
+import userReducer from "./UserReducer";
 
 const rootReducer = combineReducers({
     // ...your other reducers here

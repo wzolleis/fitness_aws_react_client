@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {invokeApig, s3Upload} from '../libs/awsLib';
+import {invokeApig} from '../libs/awsLib';
 import config from "../config";
-import {ControlLabel, FormControl, FormGroup} from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 
 class Exercises extends Component {

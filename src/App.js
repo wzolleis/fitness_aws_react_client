@@ -95,7 +95,7 @@ class App extends Component {
             updateUserToken: this.updateUserToken,
         };
 
-        if (this.props.isLoadingUserToken) {
+        if (this.state.isLoadingUserToken) {
             return false;
         }
 

@@ -27,8 +27,6 @@ class Exercises extends Component {
     };
 
     handleSubmit = async (event) => {
-        let uploadedFilename;
-
         event.preventDefault();
 
         this.setState({isLoading: true});

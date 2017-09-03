@@ -1,17 +1,17 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {PageHeader, ListGroup, ListGroupItem,} from 'react-bootstrap';
 import './Home.css';
 import config from "../config";
 import {invokeApig} from "../libs/awsLib";
 import {exerciseLabel} from "../utils/FormUtils";
 
-class Home extends Component {
+export default class Home extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoading: false,
+            isLoading: true,
             exercises: [],
         };
     }
@@ -27,10 +27,9 @@ class Home extends Component {
     };
 
     async componentDidMount() {
-        if (this.props.userToken === null) {
+        if (!this.props.isAuthenticated) {
             return;
         }
-        this.setState({isLoading: true});
 
         try {
             const results = await this.exercises();
@@ -45,7 +44,7 @@ class Home extends Component {
     }
 
     exercises() {
-        return invokeApig({path: config.apiPath.EXERCISES}, this.props.userToken);
+        return invokeApig({path: config.apiPath.EXERCISES});
     }
 
     renderExercisesList(exercises) {
@@ -66,7 +65,7 @@ class Home extends Component {
         ));
     }
 
-    static renderLander() {
+    renderLander() {
         return (
             <div className="lander">
                 <h1>Fitness</h1>
@@ -94,12 +93,10 @@ class Home extends Component {
     render() {
         return (
             <div className="Home">
-                {this.props.userToken === null
-                    ? Home.renderLander()
-                    : this.renderExercises()}
+                {this.props.isAuthenticated ? this.renderExercises() : this.renderLander()}
             </div>
         );
     }
 }
 
-export default withRouter(Home);
+

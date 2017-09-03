@@ -1,6 +1,11 @@
-import {RECEIVE_CURRENT_USER_SUCESS, REQUEST_CURRENT_USER} from "../actions/UserActions";
+import {RECEIVE_CURRENT_USER_SUCESS, REQUEST_CURRENT_USER, UPDATE_USER_TOKEN} from "../actions/UserActions";
 
-const userReducer = (state = {}, action) => {
+const initialState = {
+    userToken: null,
+    isLoadingUserToken: true,
+};
+
+const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case REQUEST_CURRENT_USER: {
             return Object.assign({}, state,
@@ -13,6 +18,12 @@ const userReducer = (state = {}, action) => {
                 {
                     isLoading: action.isLoading,
                     user: action.user
+                });
+        }
+        case UPDATE_USER_TOKEN: {
+            return Object.assign({}, state,
+                {
+                    userToken: action.userToken
                 });
         }
 

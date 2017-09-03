@@ -3,6 +3,8 @@ import config from "../config";
 
 export const REQUEST_CURRENT_USER = 'REQUEST_CURRENT_USER';
 export const RECEIVE_CURRENT_USER_SUCESS = 'REQUEST_CURRENT_USER_SUCESS';
+export const UPDATE_USER_TOKEN = 'UPDATE_USER_TOKEN';
+
 
 function requestCurrentUser() {
     return {
@@ -30,4 +32,14 @@ export function fetchCurrentUser() {
 
         return dispatch(receiveCurrentUserSuccess(currentUser));
     }
+}
+
+export function updateUserToken(userToken) {
+    return function (dispatch) {
+        return dispatch({
+            type: UPDATE_USER_TOKEN,
+            userToken: userToken
+        });
+    }
+
 }

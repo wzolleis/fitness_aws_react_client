@@ -10,7 +10,8 @@ import config from './config.js';
 import RouteNavItem from './components/RouteNavItem';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {fetchCurrentUser} from "./actions/UserActions";
+import PropTypes from 'prop-types';
+import * as UserActions from "./actions/UserActions";
 
 class App extends Component {
     constructor(props) {
@@ -39,6 +40,7 @@ class App extends Component {
         this.setState({
             userToken: userToken
         });
+        this.props.executeUpdateUserToken(userToken);
     };
 
     handleNavLink = (event) => {
@@ -121,14 +123,21 @@ class App extends Component {
     }
 }
 
+App.propTypes = {
+    userToken: PropTypes.string
+};
+
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        executeFetchCurrentUser: fetchCurrentUser
+        executeFetchCurrentUser: UserActions.fetchCurrentUser,
+        executeUpdateUserToken: UserActions.updateUserToken
     }, dispatch);
 };
 
 function mapStateToProps(state) {
-    return {}
+    return {
+        userToken: state.user.userToken
+    }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

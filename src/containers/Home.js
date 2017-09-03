@@ -80,7 +80,6 @@ class Home extends Component {
     }
 
     renderExercises() {
-        console.info('renderExercises: isLoading = ' + this.state.isLoading);
         return (
             <div className="exercises">
                 <PageHeader>Your Exercises</PageHeader>

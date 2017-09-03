@@ -95,36 +95,42 @@ class App extends Component {
             updateUserToken: this.updateUserToken,
         };
 
-        return !this.state.isLoadingUserToken
-            &&
-            (
-                <div className="App container">
-                    <Navbar fluid collapseOnSelect>
-                        <Navbar.Header>
-                            <Navbar.Brand>
-                                <Link to="/">Exercises</Link>
-                            </Navbar.Brand>
-                            <Navbar.Toggle/>
-                        </Navbar.Header>
-                        <Navbar.Collapse>
-                            <Nav pullRight>
-                                {this.state.userToken
-                                    ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
-                                    : [<RouteNavItem key={1} onClick={this.handleNavLink}
-                                                     href="/signup">Signup</RouteNavItem>,
-                                        <RouteNavItem key={2} onClick={this.handleNavLink}
-                                                      href="/login">Login</RouteNavItem>]}
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Navbar>
-                    <Routes childProps={childProps}/>
-                </div>
-            );
+        if (this.props.isLoadingUserToken) {
+            return false;
+        }
+
+        return (
+            <div className="App container">
+                <Navbar fluid collapseOnSelect>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <Link to="/">Exercises</Link>
+                        </Navbar.Brand>
+                        <Navbar.Toggle/>
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav pullRight>
+                            {this.state.userToken
+                                ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                                : [<RouteNavItem key={1} onClick={this.handleNavLink}
+                                                 href="/signup">Signup</RouteNavItem>,
+                                    <RouteNavItem key={2} onClick={this.handleNavLink}
+                                                  href="/login">Login</RouteNavItem>]}
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+                <Routes childProps={childProps}/>
+            </div>
+        );
     }
 }
 
 App.propTypes = {
-    userToken: PropTypes.string
+    isLoadingUserToken: PropTypes.bool,
+    userToken: PropTypes.string,
+    currentUser: PropTypes.object,
+    executeFetchCurrentUser: PropTypes.func,
+    executeUpdateUserToken: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {
@@ -132,11 +138,13 @@ function mapDispatchToProps(dispatch) {
         executeFetchCurrentUser: UserActions.fetchCurrentUser,
         executeUpdateUserToken: UserActions.updateUserToken
     }, dispatch);
-};
+}
 
 function mapStateToProps(state) {
     return {
-        userToken: state.user.userToken
+        isLoadingUserToken: state.user.isLoadingUserToken,
+        userToken: state.user.userToken,
+        currentUser: state.user.currentUser
     }
 }
 

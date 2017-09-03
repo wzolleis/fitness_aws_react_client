@@ -23,7 +23,8 @@ const userReducer = (state = initialState, action) => {
         case UPDATE_USER_TOKEN: {
             return Object.assign({}, state,
                 {
-                    userToken: action.userToken
+                    userToken: action.userToken,
+                    isLoadingUserToken: action.isLoadingUserToken
                 });
         }
 

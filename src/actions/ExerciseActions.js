@@ -2,8 +2,8 @@ import {invokeApig} from "../libs/awsLib";
 import config from "../config";
 
 export const REQUEST_EXERCISES = 'REQUEST_EXERCISES';
-export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
-export const RECEIVE_EXERCISES_ERROR = 'RECEIVE_EXERCISES_ERROR';
+//export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
+//export const RECEIVE_EXERCISES_ERROR = 'RECEIVE_EXERCISES_ERROR';
 
 function requestExerciseList() {
     return {
@@ -12,7 +12,7 @@ function requestExerciseList() {
     }
 }
 
-function receiveExercisesSuccess() {
+/*function receiveExercisesSuccess() {
     return {
         type: RECEIVE_EXERCISES_SUCCESS,
         isLoading: false
@@ -24,7 +24,7 @@ function receiveExercisesError() {
         type: RECEIVE_EXERCISES_ERROR,
         isLoading: false
     }
-}
+}*/
 
 export function fetchExercises(userToken) {
     return function (dispatch) {

@@ -38,7 +38,8 @@ export function updateUserToken(userToken) {
     return function (dispatch) {
         return dispatch({
             type: UPDATE_USER_TOKEN,
-            userToken: userToken
+            userToken: userToken,
+            isLoadingUserToken: false
         });
     }
 

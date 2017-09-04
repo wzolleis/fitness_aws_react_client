@@ -1,11 +1,15 @@
-import {REQUEST_EXERCISES} from "../actions/ExerciseActions";
+import {RECEIVE_EXERCISES_SUCCESS} from "../actions/ExerciseActions";
 
-const exerciseReducer = (state = {}, action) => {
+const initialState = {
+    exercises: []
+};
+
+const exerciseReducer = (state = initialState, action) => {
     switch (action.type) {
-        case REQUEST_EXERCISES:
+        case RECEIVE_EXERCISES_SUCCESS:
             return Object.assign({}, state, {
-                isLoading: action.isLoading
-            })
+                exercises: [...action.exercises]
+            });
         default:
             return state;
     }

@@ -27,10 +27,6 @@ class App extends Component {
         this.props.history.push(event.currentTarget.getAttribute('href'));
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     async componentDidMount() {
         try {
             if (await authUser()) {

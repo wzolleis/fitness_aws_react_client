@@ -7,7 +7,7 @@ const rootReducer = combineReducers({
     // ...your other reducers here
     // you have to pass formReducer under 'form' key,
     // for custom keys look up the docs for 'getFormState'
-    exercises: exerciseReducer,
+    exercise: exerciseReducer,
     user: userReducer,
     form: formReducer
 });

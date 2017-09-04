@@ -5,15 +5,13 @@ import './Home.css';
 import config from "../config";
 import {invokeApig} from "../libs/awsLib";
 import {exerciseLabel} from "../utils/FormUtils";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {receivedExercises} from "../actions/ExerciseActions";
 
-export default class Home extends Component {
+class Home extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            isLoading: true,
-            exercises: [],
-        };
     }
 
     mapExerciseToString = (exercise) => {
@@ -26,6 +24,10 @@ export default class Home extends Component {
         }
     };
 
+    exercises() {
+        return invokeApig({path: config.apiPath.EXERCISES});
+    }
+
     async componentDidMount() {
         if (!this.props.isAuthenticated) {
             return;
@@ -33,18 +35,12 @@ export default class Home extends Component {
 
         try {
             const results = await this.exercises();
-            this.setState({exercises: results});
+            this.props.dispatchReceivedExercises(results);
         }
         catch (e) {
             console.error(e);
             alert(e);
         }
-
-        this.setState({isLoading: false});
-    }
-
-    exercises() {
-        return invokeApig({path: config.apiPath.EXERCISES});
     }
 
     renderExercisesList(exercises) {
@@ -83,8 +79,7 @@ export default class Home extends Component {
             <div className="exercises">
                 <PageHeader>Your Exercises</PageHeader>
                 <ListGroup>
-                    {
-                        this.renderExercisesList(this.state.exercises)}
+                    {this.renderExercisesList(this.props.exercises)}
                 </ListGroup>
             </div>
         );
@@ -99,4 +94,19 @@ export default class Home extends Component {
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        dispatchReceivedExercises: receivedExercises
+    }, dispatch);
+}
 
+function mapStateToProps(state) {
+    return {
+        isAuthenticating: state.user.isAuthenticating,
+        isAuthenticated: state.user.isAuthenticated,
+        exercises: state.exercise.exercises
+    };
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

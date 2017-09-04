@@ -1,35 +1,15 @@
-import {invokeApig} from "../libs/awsLib";
-import config from "../config";
+export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
 
-export const REQUEST_EXERCISES = 'REQUEST_EXERCISES';
-//export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
-//export const RECEIVE_EXERCISES_ERROR = 'RECEIVE_EXERCISES_ERROR';
-
-function requestExerciseList() {
+function receiveExercisesSuccess(json) {
     return {
-        type: REQUEST_EXERCISES,
-        isLoading: true
-    }
+        exercises: json,
+        type: RECEIVE_EXERCISES_SUCCESS
+    };
 }
 
-/*function receiveExercisesSuccess() {
-    return {
-        type: RECEIVE_EXERCISES_SUCCESS,
-        isLoading: false
-    }
-}
 
-function receiveExercisesError() {
-    return {
-        type: RECEIVE_EXERCISES_ERROR,
-        isLoading: false
-    }
-}*/
-
-export function fetchExercises(userToken) {
+export function receivedExercises(exercises) {
     return function (dispatch) {
-        dispatch(requestExerciseList());
-
-        return invokeApig({path: config.apiPath.EXERCISES}, userToken);
-    }
+        dispatch(receiveExercisesSuccess(exercises));
+    };
 }

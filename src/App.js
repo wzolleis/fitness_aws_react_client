@@ -5,11 +5,16 @@ import Routes from "./Routes";
 import {authUser, signOutUser} from "./libs/awsLib";
 import RouteNavItem from "./components/RouteNavItem";
 import "./App.css";
+import {userHasAuthenticated} from "./actions/UserActions";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 
 class App extends Component {
     userHasAuthenticated = authenticated => {
-        this.setState({isAuthenticated: authenticated});
+        this.props.dispatchUserHasAuthenticated(authenticated);
+
     };
+
     handleLogout = event => {
         signOutUser();
 
@@ -24,34 +29,31 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            isAuthenticated: false,
-            isAuthenticating: true
-        };
     }
 
     async componentDidMount() {
         try {
             if (await authUser()) {
-                this.userHasAuthenticated(true);
+                this.props.dispatchUserHasAuthenticated(true);
+            }
+            else {
+                this.props.dispatchUserHasAuthenticated(false);
             }
         }
         catch (e) {
             alert(e);
+            this.props.dispatchUserHasAuthenticated(false);
         }
-
-        this.setState({isAuthenticating: false});
     }
 
     render() {
         const childProps = {
-            isAuthenticated: this.state.isAuthenticated,
+            isAuthenticated: this.props.isAuthenticated,
             userHasAuthenticated: this.userHasAuthenticated
         };
 
         return (
-            !this.state.isAuthenticating &&
+            !this.props.isAuthenticating &&
             <div className="App container">
                 <Navbar fluid collapseOnSelect>
                     <Navbar.Header>
@@ -62,7 +64,7 @@ class App extends Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav pullRight>
-                            {this.state.isAuthenticated
+                            {this.props.isAuthenticated
                                 ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
                                 : [
                                     <RouteNavItem key={1} href="/signup">
@@ -81,4 +83,17 @@ class App extends Component {
     }
 }
 
-export default withRouter(App);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        dispatchUserHasAuthenticated: userHasAuthenticated
+    }, dispatch);
+}
+
+function mapStateToProps(state) {
+    return {
+        isAuthenticating: state.user.isAuthenticating,
+        isAuthenticated: state.user.isAuthenticated
+    };
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

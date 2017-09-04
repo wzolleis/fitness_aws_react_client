@@ -1,33 +1,17 @@
-import {RECEIVE_CURRENT_USER_SUCESS, REQUEST_CURRENT_USER, UPDATE_USER_TOKEN} from "../actions/UserActions";
+import {USER_HAS_AUTHENTICATED} from "../actions/UserActions";
 
 const initialState = {
-    userToken: null,
-    isLoadingUserToken: true,
+    isAuthenticated: false,
+    isAuthenticating: true
 };
 
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
-        case REQUEST_CURRENT_USER: {
-            return Object.assign({}, state,
-                {
-                    isLoading: action.isLoading
-                });
-        }
-        case RECEIVE_CURRENT_USER_SUCESS: {
-            return Object.assign({}, state,
-                {
-                    isLoading: action.isLoading,
-                    user: action.user
-                });
-        }
-        case UPDATE_USER_TOKEN: {
-            return Object.assign({}, state,
-                {
-                    userToken: action.userToken,
-                    isLoadingUserToken: action.isLoadingUserToken
-                });
-        }
-
+        case USER_HAS_AUTHENTICATED:
+            return Object.assign({}, state, {
+                isAuthenticated: action.authenticated,
+                isAuthenticating: action.isAuthenticating
+            });
         default:
             return state;
     }

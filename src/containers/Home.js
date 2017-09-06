@@ -1,24 +1,13 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {PageHeader, ListGroup, ListGroupItem,} from 'react-bootstrap';
+import {PageHeader} from 'react-bootstrap';
 import './Home.css';
-import {exerciseLabel} from "../utils/FormUtils";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {exercises, receivedExercises} from "../actions/ExerciseActions";
+import ExerciseItemListForm from "./ExerciseItemListForm";
 
 class Home extends Component {
-
-    mapExerciseToString = (exercise) => {
-        return exerciseLabel(exercise);
-    };
-
-    handleExerciseClick = (event) => {
-        if (event) {
-            event.preventDefault();
-            this.props.history.push(event.currentTarget.getAttribute('href'));
-        }
-    };
 
     async componentDidMount() {
         if (!this.props.isAuthenticated) {
@@ -35,24 +24,6 @@ class Home extends Component {
         }
     }
 
-    renderExercisesList(exercises) {
-        return [{}].concat(exercises).map((exercise, i) => (
-            i !== 0
-                ? ( <ListGroupItem
-                    key={exercise.id}
-                    href={`/exercises/${exercise.id}`}
-                    onClick={this.handleExerciseClick()}
-                    header={this.mapExerciseToString(exercise)}>
-                </ListGroupItem> )
-                : ( <ListGroupItem
-                    key="new"
-                    href="/exercises/new"
-                    onClick={this.handleExerciseClick}>
-                    <h4><b>{'\uFF0B'}</b> Create a new exercise</h4>
-                </ListGroupItem> )
-        ));
-    }
-
     static renderLander() {
         return (
             <div className="lander">
@@ -66,13 +37,11 @@ class Home extends Component {
         );
     }
 
-    renderExercises() {
+    static renderExercises() {
         return (
             <div className="exercises">
                 <PageHeader>Your Exercises</PageHeader>
-                <ListGroup>
-                    {this.renderExercisesList(this.props.exercises)}
-                </ListGroup>
+                <ExerciseItemListForm/>
             </div>
         );
     }
@@ -80,7 +49,7 @@ class Home extends Component {
     render() {
         return (
             <div className="Home">
-                {this.props.isAuthenticated ? this.renderExercises() : this.renderLander()}
+                {this.props.isAuthenticated ? Home.renderExercises() : Home.renderLander()}
             </div>
         );
     }

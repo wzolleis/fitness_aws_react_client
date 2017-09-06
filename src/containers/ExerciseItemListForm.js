@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import {exerciseLabel} from "../utils/FormUtils";
-import {PageHeader, ListGroup, ListGroupItem,} from 'react-bootstrap';
-import {bindActionCreators} from "redux";
-import {connect} from "react-redux";
 
-class VisibleExerciseList extends Component {
+import {ListGroup, ListGroupItem} from "react-bootstrap";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {exerciseLabel} from "../utils/FormUtils";
+
+class ExerciseItemListForm extends Component {
     mapExerciseToString = (exercise) => {
         return exerciseLabel(exercise);
     };
+
     handleExerciseClick = (event) => {
         if (event) {
             event.preventDefault();
@@ -33,32 +35,29 @@ class VisibleExerciseList extends Component {
         ));
     }
 
-    renderExercises() {
-        console.info('renderExercises: isLoading = ' + this.state.isLoading);
+    render() {
+        if (!this.props.exercises) {
+            return null;
+        }
+
         return (
-            <div className="exercises">
-                <PageHeader>Your Exercises</PageHeader>
-                <ListGroup>
-                    {this.renderExercisesList(this.state.exercises)}
-                </ListGroup>
-            </div>
-        );
+            <ListGroup>
+                {this.renderExercisesList(this.props.exercises)}
+            </ListGroup>);
     }
 
-    render() {
-        return this.renderExercises();
-    }
+
 }
+
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({}, dispatch);
-}
+};
 
 function mapStateToProps(state) {
-    console.info('map state to props - exercises');
     return {
-        plans: state.exercises ? state.exercises : []
+        exercises: state.exercise.exercises ? state.exercise.exercises : []
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VisibleExerciseList);
+export default connect(mapStateToProps, mapDispatchToProps)(ExerciseItemListForm);

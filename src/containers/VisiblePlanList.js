@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 
 class VisiblePlanList extends Component {
     render() {
-        if (!this.state.plan) {
+        if (!this.props.plan) {
             return null;
         }
 

@@ -6,7 +6,7 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
 import Home from "./containers/Home";
 import Login from "./containers/Login";
-import Exercises from "./containers/ExercisesForm";
+import Exercises from "./containers/ExerciseItemForm";
 import Signup from "./containers/Signup";
 import NewExercise from "./containers/NewExercise";
 import NotFound from "./containers/NotFound";

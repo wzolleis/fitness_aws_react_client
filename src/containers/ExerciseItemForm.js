@@ -5,7 +5,7 @@ import config from "../config";
 import LoaderButton from "../components/LoaderButton";
 import {FieldGroup} from "../utils/FormUtils";
 
-class ExercisesForm extends Component {
+class ExerciseItemForm extends Component {
     constructor(props) {
         super(props);
 
@@ -169,4 +169,4 @@ class ExercisesForm extends Component {
     }
 }
 
-export default withRouter(ExercisesForm);
+export default withRouter(ExerciseItemForm);

@@ -2,29 +2,23 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {PageHeader, ListGroup, ListGroupItem,} from 'react-bootstrap';
 import './Home.css';
-import config from "../config";
-import {invokeApig} from "../libs/awsLib";
 import {exerciseLabel} from "../utils/FormUtils";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {exercises, receivedExercises} from "../actions/ExerciseActions";
 
 class Home extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     mapExerciseToString = (exercise) => {
         return exerciseLabel(exercise);
     };
+
     handleExerciseClick = (event) => {
         if (event) {
             event.preventDefault();
             this.props.history.push(event.currentTarget.getAttribute('href'));
         }
     };
-
-
 
     async componentDidMount() {
         if (!this.props.isAuthenticated) {
@@ -59,7 +53,7 @@ class Home extends Component {
         ));
     }
 
-    renderLander() {
+    static renderLander() {
         return (
             <div className="lander">
                 <h1>Fitness</h1>

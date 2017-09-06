@@ -7,7 +7,7 @@ import {invokeApig} from "../libs/awsLib";
 import {exerciseLabel} from "../utils/FormUtils";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {receivedExercises} from "../actions/ExerciseActions";
+import {exercises, receivedExercises} from "../actions/ExerciseActions";
 
 class Home extends Component {
     constructor(props) {
@@ -24,9 +24,7 @@ class Home extends Component {
         }
     };
 
-    exercises() {
-        return invokeApig({path: config.apiPath.EXERCISES});
-    }
+
 
     async componentDidMount() {
         if (!this.props.isAuthenticated) {
@@ -34,7 +32,7 @@ class Home extends Component {
         }
 
         try {
-            const results = await this.exercises();
+            const results = await exercises();
             this.props.dispatchReceivedExercises(results);
         }
         catch (e) {

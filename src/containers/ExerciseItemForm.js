@@ -80,14 +80,14 @@ class ExerciseItemForm extends Component {
             path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
             method: 'PUT',
             body: exercise,
-        }, this.props.userToken);
+        });
     }
 
     deleteExercise() {
         return invokeApig({
             path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
             method: 'DELETE',
-        }, this.props.userToken);
+        });
     }
 
     async componentDidMount() {
@@ -103,7 +103,7 @@ class ExerciseItemForm extends Component {
     }
 
     getExercise() {
-        return invokeApig({path: `/exercises/${this.props.match.params.id}`}, this.props.userToken);
+        return invokeApig({path: `/exercises/${this.props.match.params.id}`});
     }
 
     validateForm() {

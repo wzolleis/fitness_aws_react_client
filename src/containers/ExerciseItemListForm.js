@@ -23,7 +23,7 @@ class ExerciseItemListForm extends Component {
                 ? ( <ListGroupItem
                     key={exercise.id}
                     href={`/exercises/${exercise.id}`}
-                    onClick={this.handleExerciseClick()}
+                    onClick={this.handleExerciseClick}
                     header={this.mapExerciseToString(exercise)}>
                 </ListGroupItem> )
                 : ( <ListGroupItem

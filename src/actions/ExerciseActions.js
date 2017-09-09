@@ -4,16 +4,11 @@ import config from "../config";
 export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
 export const EXERCISE_SELECTED = 'EXERCISE_SELECTED';
 
-function receiveExercisesSuccess(json) {
+export function receivedExercises(exercises) {
     return {
         type: RECEIVE_EXERCISES_SUCCESS,
-        exercises: json
+        exercises
     };
-}
-
-
-export function receivedExercises(exercises) {
-    return receiveExercisesSuccess(exercises);
 }
 
 export const exercises = () => {

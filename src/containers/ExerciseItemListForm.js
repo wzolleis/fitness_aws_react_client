@@ -14,7 +14,6 @@ class ExerciseItemListForm extends Component {
 
     handleExerciseClick = (event, exercise) => {
         if (event) {
-            console.log(event);
             event.preventDefault();
             this.props.history.push(event.currentTarget.getAttribute('href'));
             this.props.exerciseSelected(exercise);
@@ -29,7 +28,6 @@ class ExerciseItemListForm extends Component {
                     href={`/exercises/${exercise.id}`}
                     onClick={(event) => this.handleExerciseClick(event, exercise)}
                     header={this.mapExerciseToString(exercise)}>
-                    {exercise.muskelgruppe}
                 </ListGroupItem> )
                 : ( <ListGroupItem
                     key="new"

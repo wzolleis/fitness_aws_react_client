@@ -4,17 +4,31 @@ import {applyMiddleware, createStore} from 'redux';
 import {createLogger} from 'redux-logger';
 import rootReducer from "./reducer/RootReducer";
 import thunk from "redux-thunk";
+import promiseMiddleware from 'redux-promise';
 
-const logger = createLogger({
-    // ...options
+/**
+ * Logs all actions and states after they are dispatched.
+ */
+
+// Setup
+const middleWare = [
+    thunk,
+    promiseMiddleware,
+];
+
+// Logger Middleware. This always has to be last
+const loggerMiddleware = createLogger({
     collapsed: true,
-    source: false
-});
 
-const store = createStore(
-    rootReducer,
-    applyMiddleware(thunk),
-    applyMiddleware(logger)
-);
+});
+middleWare.push(loggerMiddleware);
+
+const createStoreWithMiddleware = applyMiddleware(...middleWare)(createStore);
+
+export function makeStore() {
+    return createStoreWithMiddleware(rootReducer);
+}
+
+const store = makeStore();
 
 export default store;

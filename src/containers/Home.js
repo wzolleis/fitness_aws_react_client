@@ -4,7 +4,7 @@ import {PageHeader} from 'react-bootstrap';
 import './Home.css';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {exercises, receivedExercises} from "../actions/ExerciseActions";
+import {fetchExercises, receivedExercises} from "../actions/ExerciseActions";
 import ExerciseItemListForm from "./ExerciseItemListForm";
 
 class Home extends Component {
@@ -13,15 +13,7 @@ class Home extends Component {
         if (!this.props.isAuthenticated) {
             return;
         }
-
-        try {
-            const results = await exercises();
-            this.props.receivedExercises(results);
-        }
-        catch (e) {
-            console.error(e);
-            alert(e);
-        }
+        this.props.fetchExercises();
     }
 
     static renderLander() {
@@ -57,7 +49,8 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        receivedExercises: receivedExercises
+        receivedExercises: receivedExercises,
+        fetchExercises
     }, dispatch);
 }
 

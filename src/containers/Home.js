@@ -16,7 +16,7 @@ class Home extends Component {
 
         try {
             const results = await exercises();
-            this.props.dispatchReceivedExercises(results);
+            this.props.receivedExercises(results);
         }
         catch (e) {
             console.error(e);
@@ -57,7 +57,7 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        dispatchReceivedExercises: receivedExercises
+        receivedExercises: receivedExercises
     }, dispatch);
 }
 

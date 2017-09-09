@@ -2,21 +2,27 @@ import {invokeApig} from "../libs/awsLib";
 import config from "../config";
 
 export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
+export const EXERCISE_SELECTED = 'EXERCISE_SELECTED';
 
 function receiveExercisesSuccess(json) {
     return {
-        exercises: json,
-        type: RECEIVE_EXERCISES_SUCCESS
+        type: RECEIVE_EXERCISES_SUCCESS,
+        exercises: json
     };
 }
 
 
 export function receivedExercises(exercises) {
-    return function (dispatch) {
-        dispatch(receiveExercisesSuccess(exercises));
-    };
+    return receiveExercisesSuccess(exercises);
 }
 
 export const exercises = () => {
     return invokeApig({path: config.apiPath.EXERCISES});
 };
+
+export function exerciseSelected(exercise) {
+    return {
+        type: EXERCISE_SELECTED,
+        exercise
+    }
+}

@@ -4,16 +4,20 @@ import {ListGroup, ListGroupItem} from "react-bootstrap";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {exerciseLabel} from "../utils/FormUtils";
+import {withRouter} from "react-router-dom";
+import {exerciseSelected} from "../actions/ExerciseActions";
 
 class ExerciseItemListForm extends Component {
     mapExerciseToString = (exercise) => {
         return exerciseLabel(exercise);
     };
 
-    handleExerciseClick = (event) => {
+    handleExerciseClick = (event, exercise) => {
         if (event) {
+            console.log(event);
             event.preventDefault();
             this.props.history.push(event.currentTarget.getAttribute('href'));
+            this.props.exerciseSelected(exercise);
         }
     };
 
@@ -23,8 +27,9 @@ class ExerciseItemListForm extends Component {
                 ? ( <ListGroupItem
                     key={exercise.id}
                     href={`/exercises/${exercise.id}`}
-                    onClick={this.handleExerciseClick}
+                    onClick={(event) => this.handleExerciseClick(event, exercise)}
                     header={this.mapExerciseToString(exercise)}>
+                    {exercise.muskelgruppe}
                 </ListGroupItem> )
                 : ( <ListGroupItem
                     key="new"
@@ -45,19 +50,20 @@ class ExerciseItemListForm extends Component {
                 {this.renderExercisesList(this.props.exercises)}
             </ListGroup>);
     }
-
-
 }
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch);
-};
+    return bindActionCreators({
+        exerciseSelected: exerciseSelected
+    }, dispatch);
+}
 
 function mapStateToProps(state) {
     return {
-        exercises: state.exercise.exercises ? state.exercise.exercises : []
+        exercises: state.exercise.exercises ? state.exercise.exercises : [],
+        activeExercise: state.exercise.activeExercise ? state.exercise.activeExercise : null
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExerciseItemListForm);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ExerciseItemListForm));

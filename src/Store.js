@@ -1,6 +1,5 @@
 import {applyMiddleware, createStore} from 'redux';
 
-// Logger with default options
 import {createLogger} from 'redux-logger';
 import rootReducer from "./reducer/RootReducer";
 import thunk from "redux-thunk";
@@ -25,10 +24,6 @@ middleWare.push(loggerMiddleware);
 
 const createStoreWithMiddleware = applyMiddleware(...middleWare)(createStore);
 
-export function makeStore() {
-    return createStoreWithMiddleware(rootReducer);
-}
-
-const store = makeStore();
+const store = createStoreWithMiddleware(rootReducer);
 
 export default store;

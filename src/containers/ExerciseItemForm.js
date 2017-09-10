@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
 import {invokeApig} from '../libs/awsLib';
 import config from "../config";
 import LoaderButton from "../components/LoaderButton";
 import {FieldGroup} from "../utils/FormUtils";
+import {connect} from "react-redux";
+import {deleteExercise, saveExercise} from "../actions/ExerciseActions";
+import {bindActionCreators} from "redux";
 
 class ExerciseItemForm extends Component {
     constructor(props) {
@@ -33,7 +35,7 @@ class ExerciseItemForm extends Component {
         this.setState({isDeleting: true});
 
         try {
-            await this.deleteExercise();
+            this.props.deleteExercise(this.props.activeExercise);
             this.props.history.push('/');
         }
         catch (e) {
@@ -80,13 +82,6 @@ class ExerciseItemForm extends Component {
             path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
             method: 'PUT',
             body: exercise,
-        });
-    }
-
-    deleteExercise() {
-        return invokeApig({
-            path: config.apiPath.EXERCISES + `/${this.props.match.params.id}`,
-            method: 'DELETE',
         });
     }
 
@@ -169,4 +164,17 @@ class ExerciseItemForm extends Component {
     }
 }
 
-export default withRouter(ExerciseItemForm);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        deleteExercise,
+        saveExercise,
+    }, dispatch);
+}
+
+function mapStateToProps(state) {
+    return {
+        activeExercise: state.exercise.activeExercise
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExerciseItemForm);

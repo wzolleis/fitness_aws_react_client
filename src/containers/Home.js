@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import {PageHeader} from 'react-bootstrap';
 import './Home.css';
 import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
 import {fetchExercises, receivedExercises} from "../actions/ExerciseActions";
 import ExerciseItemListForm from "./ExerciseItemListForm";
 
@@ -47,13 +46,6 @@ class Home extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        receivedExercises: receivedExercises,
-        fetchExercises
-    }, dispatch);
-}
-
 function mapStateToProps(state) {
     return {
         isAuthenticating: state.user.isAuthenticating,
@@ -63,4 +55,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, {receivedExercises, fetchExercises})(Home);

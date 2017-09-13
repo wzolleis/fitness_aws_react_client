@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 
 import {ListGroup, ListGroupItem} from "react-bootstrap";
 import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
 import {exerciseLabel} from "../utils/FormUtils";
 import {withRouter} from "react-router-dom";
 import {exerciseSelected} from "../actions/ExerciseActions";
@@ -50,18 +49,11 @@ class ExerciseItemListForm extends Component {
     }
 }
 
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        exerciseSelected: exerciseSelected
-    }, dispatch);
-}
-
 function mapStateToProps(state) {
     return {
-        exercises: state.exercise.exercises ? state.exercise.exercises : [],
-        activeExercise: state.exercise.activeExercise ? state.exercise.activeExercise : null
+        exercises: state.exercise.exercises,
+        activeExercise: state.exercise.activeExercise
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ExerciseItemListForm));
+export default withRouter(connect(mapStateToProps, {exerciseSelected})(ExerciseItemListForm));

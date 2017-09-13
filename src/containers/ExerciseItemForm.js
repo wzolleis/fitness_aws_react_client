@@ -5,24 +5,8 @@ import LoaderButton from "../components/LoaderButton";
 import {FieldGroup} from "../utils/FormUtils";
 import {connect} from "react-redux";
 import {deleteExercise, saveExercise} from "../actions/ExerciseActions";
-import {bindActionCreators} from "redux";
 
 class ExerciseItemForm extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isLoading: false,
-            isDeleting: false,
-            exercise: {
-                name: '',
-                muskelgruppe: '',
-                device: '',
-                weight: ''
-            }
-        };
-    }
-
     handleDelete = async (event) => {
         event.preventDefault();
 
@@ -35,7 +19,7 @@ class ExerciseItemForm extends Component {
         this.setState({isDeleting: true});
 
         try {
-            this.props.deleteExercise(this.props.activeExercise);
+            this.props.deleteExercise(this.state.exercise);
             this.props.history.push('/');
         }
         catch (e) {
@@ -44,13 +28,24 @@ class ExerciseItemForm extends Component {
         }
     };
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoading: false,
+            isDeleting: false,
+            exercise: {
+                id: '',
+                name: '',
+                muskelgruppe: '',
+                device: '',
+                weight: ''
+            }
+        };
+    }
+
     handleSubmit = async (event) => {
         event.preventDefault();
-
-        if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-            alert('Please pick a file smaller than 5MB');
-            return;
-        }
 
         this.setState({isLoading: true});
 
@@ -102,7 +97,7 @@ class ExerciseItemForm extends Component {
     }
 
     validateForm() {
-        return this.state.exercise.name.length > 0;
+        return this.state.exercise.name && this.state.exercise.name.length > 0;
     }
 
     render() {
@@ -164,17 +159,4 @@ class ExerciseItemForm extends Component {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        deleteExercise,
-        saveExercise,
-    }, dispatch);
-}
-
-function mapStateToProps(state) {
-    return {
-        activeExercise: state.exercise.activeExercise
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ExerciseItemForm);
+export default connect(null, {deleteExercise, saveExercise})(ExerciseItemForm);

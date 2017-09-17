@@ -32,5 +32,10 @@
     "deploy": "aws s3 sync build/ s3://exercises-app-client",
     "postdeploy": "aws cloudfront create-invalidation --distribution-id E3OZ488QP9YXPO --paths '/*'",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-preset-flow": "^6.23.0",
+    "flow": "^0.2.3",
+    "flow-bin": "^0.54.1"
   }
 }

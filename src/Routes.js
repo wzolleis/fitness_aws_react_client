@@ -10,6 +10,7 @@ import Exercises from "./containers/ExerciseItemForm";
 import Signup from "./containers/Signup";
 import NewExercise from "./containers/NewExercise";
 import PlanList from "./containers/PlanList";
+import PlanListItem from "./containers/PlanListItem";
 import NotFound from "./containers/NotFound";
 
 export default ({childProps}) =>
@@ -21,6 +22,7 @@ export default ({childProps}) =>
             <AuthenticatedRoute path="/exercises/new" exact component={NewExercise} props={childProps}/>
         <AuthenticatedRoute path="/plans" exact component={PlanList} props={childProps}/>
             <AuthenticatedRoute path="/exercises/:id" exact component={Exercises} props={childProps}/>
+            <AuthenticatedRoute path="/plans/:id" exact component={PlanListItem} props={childProps}/>
         {/* Finally, catch all unmatched routes */}
             <Route component={NotFound}/>
     </Switch>;

@@ -2,6 +2,7 @@ import {connect} from 'react-redux';
 import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
 import {fetchPlan} from '../actions/PlanActions';
+import {Field, reduxForm} from 'redux-form';
 
 class PlanListItem extends Component {
     componentDidMount() {
@@ -9,13 +10,40 @@ class PlanListItem extends Component {
         this.props.fetchPlan(id);
     }
 
-    render() {
+    renderField = (field) => {
         return (
-            <div>
-                <h3>Plan List Items!</h3>
+            <div className='form-group'>
+                <label>{field.label}</label>
+                <input className='form-control' type='text' {...field.input}/>
             </div>
+        )
+    };
+
+    render() {
+
+        return (
+            <form>
+                <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
+                <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
+            </form>
         );
     }
 }
 
-export default withRouter(connect(null, {fetchPlan})(PlanListItem));
+function mapStateToProps({plans}, customProps) {
+    const id = customProps.match.params.id;
+    let selectedPlan = plans[id];
+
+    return {
+        selectedPlan,
+        initialValues: {
+            name: selectedPlan ? selectedPlan.name : '',
+            createdAt: selectedPlan ? selectedPlan.createdAt : ''
+        }
+    }
+}
+
+const PlanListItemForm = reduxForm(
+    {form: 'PlanListItemForm'}, mapStateToProps)(PlanListItem);
+
+export default withRouter(connect(mapStateToProps, {fetchPlan})(PlanListItemForm));

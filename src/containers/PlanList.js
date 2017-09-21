@@ -8,8 +8,8 @@ import * as _ from "lodash";
 
 
 type PlanListProps = {
-    plans: Plan[],
-    fetchPlans: () => Plan[]
+    plans: {},
+    fetchPlans: () => {}
 }
 
 class PlanList extends Component<PlanListProps> {
@@ -23,14 +23,8 @@ class PlanList extends Component<PlanListProps> {
         this.props.history.push(event.currentTarget.getAttribute('href'));
     };
 
-    renderPlans = (plans: Plan[]) => {
-        return plans.map(plan => {
-            if (_.isNil(plan) || _.isNil(plan.id)) {
-                return <div>...</div>
-            }
-
-            console.log(plan);
-
+    renderPlans = (plans) => {
+        return _.map(plans, plan => {
             return (
                 <div key={plan.id}
                      onClick={(event => this.handlePlanClick(event))}
@@ -40,7 +34,7 @@ class PlanList extends Component<PlanListProps> {
                     </li>
                 </div>
             )
-        })
+        });
     };
 
     render() {
@@ -59,9 +53,9 @@ class PlanList extends Component<PlanListProps> {
     }
 }
 
-function mapStateToProps({plan}: PlanState): PlanListProps {
+function mapStateToProps({plans}: PlanState): PlanListProps {
     return {
-        plans: plan.plans
+        plans
     };
 }
 

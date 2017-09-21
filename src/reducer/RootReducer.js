@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
     // for custom keys look up the docs for 'getFormState'
     exercise: exerciseReducer,
     user: userReducer,
-    plan: planReducer,
+    plans: planReducer,
     form: formReducer
 });
 

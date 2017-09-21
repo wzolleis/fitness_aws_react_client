@@ -1,24 +1,16 @@
 import {FETCH_PLAN, FETCH_PLANS} from "../actions/PlanActions";
 import {PlanState, Action} from '../types';
+import _ from 'lodash';
 
-const initialState: PlanState = {
-    plans: []
-};
+const initialState: PlanState = {};
 
 export const planReducer = (state: PlanState = initialState, action: Action): PlanState => {
     switch (action.type) {
         case FETCH_PLANS:
-            return Object.assign({}, state, {
-                plans: [...action.payload],
-            });
+            const newPlans = _.mapKeys(action.payload, 'id');
+            return {...state.plans, ...newPlans};
         case FETCH_PLAN:
-            return Object.assign({}, state, {
-                plans: state.plans.map(item => item.id === action.payload.id ?
-                    // transform the one with a matching id
-                    {...action.payLoad} :
-                    item
-                )
-            });
+            return {...state, [action.payload.id]: action.payload};
         default:
             return state;
     }

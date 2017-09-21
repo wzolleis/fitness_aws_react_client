@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {fetchPlans} from "../actions/PlanActions";
 import type {Plan, PlanState} from "../types";
 import {withRouter} from 'react-router-dom';
+import * as _ from "lodash";
 
 
 type PlanListProps = {
@@ -24,13 +25,19 @@ class PlanList extends Component<PlanListProps> {
 
     renderPlans = (plans: Plan[]) => {
         return plans.map(plan => {
+            if (_.isNil(plan) || _.isNil(plan.id)) {
+                return <div>...</div>
+            }
+
+            console.log(plan);
+
             return (
-                <div onClick={(event => this.handlePlanClick(event))}
-                     key={plan.id}
+                <div key={plan.id}
+                     onClick={(event => this.handlePlanClick(event))}
                      href={`/plans/${plan.id}`}>
                     <li className='list-group-item'>
                         {plan.name} {plan.test}
-                </li>
+                    </li>
                 </div>
             )
         })
@@ -38,6 +45,9 @@ class PlanList extends Component<PlanListProps> {
 
     render() {
         const {plans} : Plan[] = this.props;
+        if (!plans) {
+            return <div>Loading....</div>
+        }
         return (
             <div>
                 <h3>Plans</h3>

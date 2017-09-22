@@ -54,9 +54,7 @@ class PlanList extends Component<PlanListProps> {
 }
 
 function mapStateToProps({plans}: PlanState): PlanListProps {
-    return {
-        plans
-    };
+    return {plans};
 }
 
 export default withRouter(connect(mapStateToProps, {fetchPlans})(PlanList))

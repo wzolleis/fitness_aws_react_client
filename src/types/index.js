@@ -17,9 +17,17 @@ export type Plan = {
     exercises: String[]
 };
 
+export type ExerciseState = {
+    exercises: Object,
+    isDeleting: boolean,
+    isLoading: boolean,
+    activeExercise: Object
+};
+
 export type PlanState = {
-    plans: Plan[]
+    plans: Object
 }
 export type State = {
+    exercise: ExerciseState,
     plan: PlanState
 };

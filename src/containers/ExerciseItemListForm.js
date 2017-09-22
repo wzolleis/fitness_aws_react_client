@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {exerciseLabel} from "../utils/FormUtils";
 import {withRouter} from "react-router-dom";
 import {exerciseSelected} from "../actions/ExerciseActions";
+import _ from 'lodash';
 
 class ExerciseItemListForm extends Component {
     mapExerciseToString = (exercise) => {
@@ -20,21 +21,29 @@ class ExerciseItemListForm extends Component {
     };
 
     renderExercisesList(exercises) {
-        return [{}].concat(exercises).map((exercise, i) => (
-            i !== 0
-                ? ( <ListGroupItem
-                    key={exercise.id}
-                    href={`/exercises/${exercise.id}`}
-                    onClick={(event) => this.handleExerciseClick(event, exercise)}
-                    header={this.mapExerciseToString(exercise)}>
-                </ListGroupItem> )
-                : ( <ListGroupItem
-                    key="new"
-                    href="/exercises/new"
-                    onClick={this.handleExerciseClick}>
-                    <h4><b>{'\uFF0B'}</b> Create a new exercise</h4>
-                </ListGroupItem> )
-        ));
+        // ein dummy-Objekt am Anfang einfuegen, damit unten daraus eine andere route fuer 'new' wird
+        const my_exercises = {
+            'create_new': {
+                id: 'create_new'
+            },
+            ...exercises
+        };
+        return _.map(my_exercises, exercise => {
+            return (
+                exercise.id !== 'create_new' ?
+                    (<ListGroupItem
+                        key={exercise.id}
+                        href={`/exercises/${exercise.id}`}
+                        onClick={(event) => this.handleExerciseClick(event, exercise)}
+                        header={this.mapExerciseToString(exercise)}>
+                    </ListGroupItem>)
+                    : (<ListGroupItem
+                        key="new"
+                        href="/exercises/new"
+                        onClick={this.handleExerciseClick}>
+                        <h4><b>{'\uFF0B'}</b> Create a new exercise</h4>
+                    </ListGroupItem>))
+        });
     }
 
     render() {

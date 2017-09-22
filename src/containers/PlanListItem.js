@@ -3,12 +3,14 @@ import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
 import {fetchPlan} from '../actions/PlanActions';
 import {Field, reduxForm} from 'redux-form';
-import ExerciseSelection from "./ExerciseSelection";
+import {fetchExercises} from "../actions/ExerciseActions";
+import SelectedExerciseList from "./SelectedExerciseList";
 
 class PlanListItem extends Component {
     componentDidMount() {
         const id = this.props.match.params.id;
         this.props.fetchPlan(id);
+        this.props.fetchExercises();
     }
 
     renderField = (field) => {
@@ -27,18 +29,21 @@ class PlanListItem extends Component {
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
                 <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
                 <Field name='exerciseSelection' id='selectedPlan.exerciseSelection'
-                       component={ExerciseSelection} plan={this.props.selectedPlan}/>
+                       component={SelectedExerciseList} plan={this.props.selectedPlan}
+                       exercises={this.props.exercises}/>
+
             </form>
         );
     }
 }
 
-function mapStateToProps({plans}, customProps) {
+function mapStateToProps(state, customProps) {
     const id = customProps.match.params.id;
-    let selectedPlan = plans[id];
+    let selectedPlan = state.plans[id];
 
     return {
         selectedPlan,
+        exercises: state.exercise.exercises,
         initialValues: {
             name: selectedPlan ? selectedPlan.name : '',
             createdAt: selectedPlan ? selectedPlan.createdAt : ''
@@ -49,4 +54,4 @@ function mapStateToProps({plans}, customProps) {
 const PlanListItemForm = reduxForm(
     {form: 'PlanListItemForm'}, mapStateToProps)(PlanListItem);
 
-export default withRouter(connect(mapStateToProps, {fetchPlan})(PlanListItemForm));
+export default withRouter(connect(mapStateToProps, {fetchPlan, fetchExercises})(PlanListItemForm));

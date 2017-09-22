@@ -29,7 +29,11 @@ export type SelectionState = {
 }
 
 export type PlanState = {
-    plans: Object,
+    // der Planstate ist ein Objekt mit den Plan-Objekten (Zugriff ueber die Plan-Id)
+};
+
+export type ExerciseSelectionState = {
+    // 0: "abc", 1: "xyz"
 }
 
 export type State = {

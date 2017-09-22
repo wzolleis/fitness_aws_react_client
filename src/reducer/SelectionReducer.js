@@ -1,6 +1,6 @@
-import {EXERCISE_SELECTED, PLAN_SELECTED} from "../actions/SelectionActions";
+import {EXERCISE_SELECTED, PLAN_SELECTED, RESET_SELECTION} from "../actions/SelectionActions";
 import type {SelectionState} from "../types/index";
-import {EXERCISE_DELETED} from "../actions/ExerciseActions";
+
 
 const initialState: SelectionState = {
     activeExercise: null,
@@ -12,17 +12,22 @@ export const selectionReducer = (state: SelectionState = initialState, action: A
         case EXERCISE_SELECTED:
             return {
                 ...state,
-                activeExercise: action.payload
+                activeExercise: action.payload,
+                activePlan: null
             };
         case PLAN_SELECTED:
             return {
                 ...state,
-                activePlan: action.payload
+                activePlan: action.payload,
+                activeExercise: null
             };
-        case EXERCISE_DELETED:
+
+        case RESET_SELECTION:
             return {
                 ...state,
-                activeExercise: null
+                activeExercise: null,
+                activePlan: null
+
             };
         default:
             return state;

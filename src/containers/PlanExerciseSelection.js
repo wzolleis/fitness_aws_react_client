@@ -3,8 +3,9 @@ import {Field, reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {planExerciseSelectionChanged} from "../actions/ExerciseSelectionActions";
 import CheckboxGroup from "../components/CheckBoxGroup";
+import SelectedExerciseSelector from '../selectors/selected_exercises';
 
-class SelectedExerciseList extends Component {
+class PlanExerciseSelection extends Component {
 
     /** Die Selektion der Exercise-Ids hat sich geaendert
      *
@@ -17,7 +18,7 @@ class SelectedExerciseList extends Component {
     render() {
         return (
             <div>
-                <h3>Selection of Exercises!</h3>
+                <h3>Exercises auswählen</h3>
                 <Field name="exercises" component={CheckboxGroup} options={this.props.exercises}
                        onSelectionChanged={this.onSelectionChanged}/>
             </div>
@@ -28,13 +29,14 @@ class SelectedExerciseList extends Component {
 function mapStateToProps(state) {
     return {
         plan: state.selection.activePlan,
-        exercises: state.exercise.exercises
+        exercises: state.exercise.exercises,
+        selectedExercises: SelectedExerciseSelector(state)
     };
 }
 
-const SelectedExerciseListForm = reduxForm(
-    {form: 'SelectedExerciseListForm'}, mapStateToProps)(SelectedExerciseList);
+const PlanExerciseSelectionForm = reduxForm(
+    {form: 'SelectedExerciseListForm'}, mapStateToProps)(PlanExerciseSelection);
 
 export default connect(mapStateToProps, {
     planExerciseSelectionChanged,
-})(SelectedExerciseListForm);
+})(PlanExerciseSelectionForm);

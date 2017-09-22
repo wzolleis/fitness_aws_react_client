@@ -21,13 +21,19 @@ export type ExerciseState = {
     exercises: Object,
     isDeleting: boolean,
     isLoading: boolean,
-    activeExercise: Object
 };
 
-export type PlanState = {
-    plans: Object
+export type SelectionState = {
+    activeExercise: Object,
+    activePlan: Object
 }
+
+export type PlanState = {
+    plans: Object,
+}
+
 export type State = {
     exercise: ExerciseState,
-    plan: PlanState
+    plan: PlanState,
+    selection: SelectionState,
 };

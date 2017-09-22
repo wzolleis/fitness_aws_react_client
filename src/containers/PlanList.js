@@ -2,32 +2,30 @@ import {connect} from 'react-redux';
 import React, {Component} from 'react';
 
 import {fetchPlans} from "../actions/PlanActions";
-import type {Plan, PlanState} from "../types";
+import {planSelected} from "../actions/SelectionActions";
 import {withRouter} from 'react-router-dom';
 import * as _ from "lodash";
 
 
-type PlanListProps = {
-    plans: {},
-    fetchPlans: () => {}
-}
-
-class PlanList extends Component<PlanListProps> {
-    props: PlanListProps;
-
+class PlanList extends Component {
     componentDidMount() {
         this.props.fetchPlans();
     }
 
-    handlePlanClick = (event) => {
+    handlePlanClick = (event, plan) => {
+        this.props.planSelected(plan);
         this.props.history.push(event.currentTarget.getAttribute('href'));
     };
 
     renderPlans = (plans) => {
+        if (!plans) {
+            return <div>Loading...</div>
+        }
+
         return _.map(plans, plan => {
             return (
                 <div key={plan.id}
-                     onClick={(event => this.handlePlanClick(event))}
+                     onClick={(event => this.handlePlanClick(event, plan))}
                      href={`/plans/${plan.id}`}>
                     <li className='list-group-item'>
                         {plan.name} {plan.test}
@@ -38,7 +36,7 @@ class PlanList extends Component<PlanListProps> {
     };
 
     render() {
-        const {plans} : Plan[] = this.props;
+        const {plans} = this.props;
         if (!plans) {
             return <div>Loading....</div>
         }
@@ -53,8 +51,8 @@ class PlanList extends Component<PlanListProps> {
     }
 }
 
-function mapStateToProps({plans}: PlanState): PlanListProps {
+function mapStateToProps({plans}) {
     return {plans};
 }
 
-export default withRouter(connect(mapStateToProps, {fetchPlans})(PlanList))
+export default withRouter(connect(mapStateToProps, {fetchPlans, planSelected})(PlanList))

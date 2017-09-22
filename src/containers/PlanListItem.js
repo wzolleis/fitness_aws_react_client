@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
 import {fetchPlan} from '../actions/PlanActions';
 import {Field, reduxForm} from 'redux-form';
+import ExerciseSelection from "./ExerciseSelection";
 
 class PlanListItem extends Component {
     componentDidMount() {
@@ -25,6 +26,8 @@ class PlanListItem extends Component {
             <form>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
                 <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
+                <Field name='exerciseSelection' id='selectedPlan.exerciseSelection'
+                       component={ExerciseSelection} plan={this.props.selectedPlan}/>
             </form>
         );
     }

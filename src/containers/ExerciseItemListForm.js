@@ -4,7 +4,7 @@ import {ListGroup, ListGroupItem} from "react-bootstrap";
 import {connect} from "react-redux";
 import {exerciseLabel} from "../utils/FormUtils";
 import {withRouter} from "react-router-dom";
-import {exerciseSelected} from "../actions/ExerciseActions";
+import {exerciseSelected} from "../actions/SelectionActions";
 import _ from 'lodash';
 
 class ExerciseItemListForm extends Component {
@@ -61,7 +61,7 @@ class ExerciseItemListForm extends Component {
 function mapStateToProps(state) {
     return {
         exercises: state.exercise.exercises,
-        activeExercise: state.exercise.activeExercise
+        activeExercise: state.selection.activeExercise
     }
 }
 

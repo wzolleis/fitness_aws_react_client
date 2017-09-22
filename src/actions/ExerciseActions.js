@@ -2,7 +2,6 @@ import {invokeApig} from "../libs/awsLib";
 import config from "../config";
 
 export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
-export const EXERCISE_SELECTED = 'EXERCISE_SELECTED';
 export const EXERCISE_DELETED = 'EXERCISE_DELETED';
 export const EXERCISE_SAVED = 'EXERCISE_SAVED';
 export const FETCH_EXERCISES = 'FETCH_EXERCISES';
@@ -14,13 +13,6 @@ export function receivedExercises(exercises) {
     };
 }
 
-
-export function exerciseSelected(exercise) {
-    return {
-        type: EXERCISE_SELECTED,
-        payload: exercise
-    }
-}
 
 export function deleteExercise(exercise) {
     const apiRequest = invokeApig({

@@ -12,6 +12,7 @@ export function fetchPlans() {
     }
 }
 
+
 export function fetchPlan(id : String) {
     const apiRequest = invokeApig({path: `${config.apiPath.PLANS}/${id}`});
     return {

@@ -38,6 +38,7 @@ export type ExerciseSelectionState = {
 
 export type State = {
     exercise: ExerciseState,
-    plan: PlanState,
+    plans: PlanState,
     selection: SelectionState,
+    exercise_selection: Object
 };

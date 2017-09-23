@@ -4,6 +4,7 @@ export function planExerciseSelectionChanged(plan, exercises) {
     return {
         type: PLAN_EXERCISE_SELECTION_CHANGED,
         payload: {
+            plan,
             ...exercises
         }
     }

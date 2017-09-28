@@ -1,12 +1,15 @@
-import {invokeApig} from "../libs/awsLib";
+//@flow
+import type {Action, Exercise, Exercises} from '../types';
+
 import config from "../config";
+import {invokeApig} from "../libs/awsLib";
 
 export const RECEIVE_EXERCISES_SUCCESS = 'RECEIVE_EXERCISES_SUCCESS';
 export const EXERCISE_DELETED = 'EXERCISE_DELETED';
 export const EXERCISE_SAVED = 'EXERCISE_SAVED';
 export const FETCH_EXERCISES = 'FETCH_EXERCISES';
 
-export function receivedExercises(exercises) {
+export function receivedExercises(exercises: Exercises) {
     return {
         type: RECEIVE_EXERCISES_SUCCESS,
         payload: exercises
@@ -14,7 +17,7 @@ export function receivedExercises(exercises) {
 }
 
 
-export function deleteExercise(exercise) {
+export function deleteExercise(exercise: Exercise): Action {
     const apiRequest = invokeApig({
         path: config.apiPath.EXERCISES + `/${exercise.id}`,
         method: 'DELETE',
@@ -28,7 +31,7 @@ export function deleteExercise(exercise) {
     }
 }
 
-export function saveExercise(exercise) {
+export function saveExercise(exercise: Exercise): Action {
     const apiRequest = invokeApig({
         path: config.apiPath.EXERCISES + `/${exercise.id}`,
         method: 'PUT',
@@ -42,7 +45,7 @@ export function saveExercise(exercise) {
     };
 }
 
-export function fetchExercises() {
+export function fetchExercises(): Action {
     const apiRequest = invokeApig({path: config.apiPath.EXERCISES});
     return {
         type: FETCH_EXERCISES,

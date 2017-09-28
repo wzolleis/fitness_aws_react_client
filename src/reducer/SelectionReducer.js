@@ -1,3 +1,5 @@
+//@flow
+import type {Action} from '../types';
 import {EXERCISE_SELECTED, PLAN_SELECTED, RESET_SELECTION} from "../actions/SelectionActions";
 import type {SelectionState} from "../types/index";
 

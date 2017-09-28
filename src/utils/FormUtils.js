@@ -1,5 +1,8 @@
-import React from 'react';
+// @flow weak
 import {FormControl, ControlLabel, FormGroup} from "react-bootstrap";
+import React from 'react';
+
+import type {Exercise} from '../types';
 
 
 export function FieldGroup({id, label, help, ...props}) {
@@ -13,6 +16,6 @@ export function FieldGroup({id, label, help, ...props}) {
     );
 }
 
-export function exerciseLabel(exercise) {
+export function exerciseLabel(exercise: Exercise): string {
     return exercise.device + ' - ' + exercise.name;
 }

@@ -1,12 +1,19 @@
-import React, {Component} from 'react';
-import {invokeApig} from '../libs/awsLib';
-import config from "../config";
-import LoaderButton from "../components/LoaderButton";
-import {FieldGroup} from "../utils/FormUtils";
+import type {ContextRouter} from 'react-router-dom';
 import {connect} from "react-redux";
-import {deleteExercise, saveExercise} from "../actions/ExerciseActions";
+import React, {Component} from 'react';
 
-class ExerciseItemForm extends Component {
+import type {Exercise} from '../types';
+import {FieldGroup} from "../utils/FormUtils";
+import {deleteExercise, saveExercise} from "../actions/ExerciseActions";
+import {invokeApig} from '../libs/awsLib';
+import LoaderButton from "../components/LoaderButton";
+import config from "../config";
+
+type ExerciseItemFormProps = ContextRouter & {
+    deleteExercise: Exercise => void
+}
+
+class ExerciseItemForm extends Component<ExerciseItemFormProps> {
     handleDelete = async (event) => {
         event.preventDefault();
 
@@ -94,7 +101,7 @@ class ExerciseItemForm extends Component {
 
     getExercise() {
         return invokeApig({path: `/exercises/${this.props.match.params.id}`});
-    }
+    };
 
     validateForm() {
         return this.state.exercise.name && this.state.exercise.name.length > 0;

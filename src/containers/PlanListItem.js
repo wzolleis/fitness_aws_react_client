@@ -1,29 +1,36 @@
+import {Field, Form, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
-import React, {Component} from 'react';
 import {withRouter} from "react-router-dom";
-import {fetchPlan} from '../actions/PlanActions';
-import {Field, reduxForm} from 'redux-form';
+import React, {Component} from 'react';
+import _ from 'lodash';
+import type {ContextRouter} from 'react-router-dom';
+import type {Exercises, Plan, State} from '../types';
 import {fetchExercises} from "../actions/ExerciseActions";
+import {fetchPlan, savePlan} from '../actions/PlanActions';
+import LoaderButton from "../components/LoaderButton";
 import PlanExerciseSelectionForm from "./PlanExerciseSelection";
 import SelectedExercisesList from '../components/selected_exercises_list';
-import LoaderButton from "../components/LoaderButton";
-import type {State} from "../types/index";
 
-class PlanListItem extends Component {
+type PlanListItemProps = FormProps & {
+    handleDelete: Plan => void,
+    selectedExercises: Exercises,
+    fetchExercises: () => void,
+    fetchPlan: (string) => void
+};
+
+type PlanListItemState = {
+    isLoading: boolean,
+    isDeleting: boolean,
+}
+
+class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
     componentDidMount() {
         const id = this.props.match.params.id;
         this.props.fetchPlan(id);
         this.props.fetchExercises();
-    }
-
-    componentDidUpdate = (prevProps, nextProps) => {
-        if (prevProps.selectedPlan === null && nextProps.selectedPlan !== null) {
-            this.props.change('name', nextProps.selectedPlan.name);
-            this.props.change('createdAt', nextProps.selectedPlan.createdAt);
-        }
     };
 
-    renderField = (field) => {
+    renderField = (field: Field) => {
         return (
             <div className='form-group'>
                 <label>{field.label}</label>
@@ -32,14 +39,20 @@ class PlanListItem extends Component {
         )
     };
 
+    handleDelete = async (event) => {
+
+    }
+
     handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            await this.savePlan({
-                ...this.props.selectedPlan,
-            });
-            this.props.history.push('/');
+            this.props.savePlan(
+                this.props.selectedPlan,
+                _.values(this.props.selectedExercises)
+                ,
+            );
+            this.props.history.push('/plans');
         }
         catch (e) {
             alert(e);
@@ -48,9 +61,8 @@ class PlanListItem extends Component {
     };
 
     render() {
-
         return (
-            <form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
                 <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
 
@@ -79,14 +91,16 @@ class PlanListItem extends Component {
                     text="Delete"
                     loadingText="Deleting…"/>
 
-            </form>
+            </Form>
         );
     }
 }
 
-function mapStateToProps(state: State, customProps) {
-    const id = customProps.match.params.id; // from current url (react-router)
-    let selectedPlan = state.plans[id];
+type PlanListItemCustomProps = ContextRouter;
+
+function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
+    const id: string = customProps.match.params.id; // from current url (react-router)
+    let selectedPlan: Plan = state.plans[id];
 
     return {
         isLoading: false,
@@ -104,4 +118,4 @@ function mapStateToProps(state: State, customProps) {
 const PlanListItemForm = reduxForm(
     {form: 'PlanListItemForm'}, mapStateToProps)(PlanListItem);
 
-export default withRouter(connect(mapStateToProps, {fetchPlan, fetchExercises})(PlanListItemForm));
+export default withRouter(connect(mapStateToProps, {fetchPlan, fetchExercises, savePlan})(PlanListItemForm));

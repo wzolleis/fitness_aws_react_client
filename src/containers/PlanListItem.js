@@ -5,9 +5,9 @@ import {withRouter} from "react-router-dom";
 import React, {Component} from 'react';
 import _ from 'lodash';
 import type {ContextRouter} from 'react-router-dom';
-import type {Exercises, Exercise, Plan, State} from '../types';
+import type {Exercises, ExerciseId, Exercise, Plan, State} from '../types';
 import {fetchExercises} from "../actions/ExerciseActions";
-import {fetchPlan, savePlan} from '../actions/PlanActions';
+import {fetchPlan, savePlan, updateExerciseSelection} from '../actions/PlanActions';
 import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 
@@ -34,7 +34,8 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         this.props.fetchExercises();
     };
 
-    renderField = (field: $FlowIssue): $FlowIssue => {
+    // $FlowFixMe
+    renderField = (field) => {
         return (
             <div className='form-group'>
                 <label>{field.label}</label>
@@ -68,11 +69,18 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         return !_.isNil(_.find(this.props.selectedExercises, {id: exercise.id}));
     };
 
+    // FlowFixMe - event-type ist unbekannt
+    updateExerciseSelection = (event) => {
+        const id = '';
+        this.props.updateExerciseSelection(id);
+    };
+
     renderExercisesList(exercises: Exercises) {
         return _.map(exercises, exercise => {
             const className: string = this.isExerciseSelected(exercise) ? 'list-group-item active' : 'list-group-item';
             return (
-                <li className="list-group-item active" key={exercise.id}>
+                <li className="list-group-item active" key={exercise.id}
+                    onSelect={this.updateExerciseSelection(exercise.id)}>
                     {exercise.name}
                 </li>
             )
@@ -133,4 +141,9 @@ function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
 const PlanListItemForm = reduxForm(
     {form: 'PlanListItemForm'})(PlanListItem);
 
-export default withRouter(connect(mapStateToProps, {fetchPlan, fetchExercises, savePlan})(PlanListItemForm));
+export default withRouter(connect(mapStateToProps, {
+    fetchPlan,
+    fetchExercises,
+    savePlan,
+    updateExerciseSelection
+})(PlanListItemForm));

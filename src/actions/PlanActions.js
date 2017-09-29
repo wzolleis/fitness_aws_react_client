@@ -1,11 +1,12 @@
 //@flow weak
 import config from "../config";
 import {invokeApig} from "../libs/awsLib";
-import type {Plan, ExerciseId, PlanId} from "../types/index";
+import type {Plan, ExerciseId, PlanId, Action} from "../types/index";
 
 export const FETCH_PLANS: string = 'FETCH_PLANS';
 export const FETCH_PLAN: string = 'FETCH_PLAN';
 export const PLAN_SAVED: string = 'PLAN_SAVED';
+export const UPDATE_EXERCISE_SELECTION = 'UPDATE_EXERCISE_SELECTION';
 
 export function fetchPlans() {
     const apiRequest = invokeApig({path: config.apiPath.PLANS});
@@ -21,6 +22,14 @@ export function fetchPlan(id: PlanId) {
     return {
         type: FETCH_PLAN,
         payload: apiRequest
+    }
+}
+
+export function updateExerciseSelection(id: ExerciseId): Action {
+    return {
+        type: UPDATE_EXERCISE_SELECTION,
+        payload: {id}
+
     }
 }
 

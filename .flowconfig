@@ -2,7 +2,7 @@
 
 
 [include]
-.*/src/.*
+./src/**/.*
 
 [libs]
 ./node_modules/fbjs/flow/lib
@@ -16,5 +16,6 @@ esproposal.class_instance_fields = enable
 module.name_mapper = '^\(.*\)\.css$' -> 'react-scripts/config/flow/css'
 module.name_mapper = '^\(.*\)\.\(jpg\|png\|gif\|eot\|otf\|webp\|svg\|ttf\|woff\|woff2\|mp4\|webm\)$' -> 'react-scripts/config/flow/file'
 
+suppress_comment = \\(.\\|\n\\)*\\$FlowFixMe
 suppress_type = $FlowIssue
 suppress_type = $FlowFixMe

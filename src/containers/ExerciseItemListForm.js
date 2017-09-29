@@ -39,7 +39,7 @@ class ExerciseItemListForm extends Component<ExerciseItemListFormProps> {
             weight: 'dummy',
             muskelgruppe: 'dummy',
             name: 'dummy'
-        }
+        };
         const my_exercises: Exercises = {
             'create_new': new_exercise,
             ...exercises

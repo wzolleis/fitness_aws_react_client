@@ -1,23 +1,27 @@
+// @flow
 import {Field, Form, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
 import React, {Component} from 'react';
 import _ from 'lodash';
 import type {ContextRouter} from 'react-router-dom';
-import type {Exercises, Plan, State} from '../types';
+import type {Exercises, Exercise, Plan, State} from '../types';
 import {fetchExercises} from "../actions/ExerciseActions";
 import {fetchPlan, savePlan} from '../actions/PlanActions';
 import LoaderButton from "../components/LoaderButton";
-import PlanExerciseSelectionForm from "./PlanExerciseSelection";
-import SelectedExercisesList from '../components/selected_exercises_list';
+import type {FormProps} from 'redux-form';
 
 type PlanListItemProps = FormProps & {
+    selectedExercises: Exercise[],
+    selectedPlan: Plan,
     handleDelete: Plan => void,
-    selectedExercises: Exercises,
     fetchExercises: () => void,
     fetchPlan: (string) => void
 };
 
+/**
+ * component state
+ */
 type PlanListItemState = {
     isLoading: boolean,
     isDeleting: boolean,
@@ -30,7 +34,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         this.props.fetchExercises();
     };
 
-    renderField = (field: Field) => {
+    renderField = (field: $FlowIssue): $FlowIssue => {
         return (
             <div className='form-group'>
                 <label>{field.label}</label>
@@ -40,8 +44,8 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
     };
 
     handleDelete = async (event) => {
-
-    }
+        console.error('delete plan not implemented yet')
+    };
 
     handleSubmit = async (event) => {
         event.preventDefault();
@@ -60,20 +64,30 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         }
     };
 
+    isExerciseSelected: Exercise => boolean = (exercise) => {
+        return !_.isNil(_.find(this.props.selectedExercises, {id: exercise.id}));
+    };
+
+    renderExercisesList(exercises: Exercises) {
+        return _.map(exercises, exercise => {
+            const className: string = this.isExerciseSelected(exercise) ? 'list-group-item active' : 'list-group-item';
+            return (
+                <li className="list-group-item active" key={exercise.id}>
+                    {exercise.name}
+                </li>
+            )
+        });
+    }
+
+
     render() {
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
                 <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
-
-                <h3>Auswahl</h3>
-                <Field name='selectedExercises' id='selectedPlan.selectedExercises'
-                       component={SelectedExercisesList}/>
-
-                <hr/>
-                <Field name='exerciseSelection' id='selectedPlan.exerciseSelection'
-                       component={PlanExerciseSelectionForm} plan={this.props.selectedPlan}
-                       exercises={this.props.exercises}/>
+                <ul className="list-group">
+                    {this.renderExercisesList(this.props.exercises)}
+                </ul>
                 <LoaderButton
                     block
                     bsStyle="primary"
@@ -99,15 +113,16 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 type PlanListItemCustomProps = ContextRouter;
 
 function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
-    const id: string = customProps.match.params.id; // from current url (react-router)
-    let selectedPlan: Plan = state.plans[id];
+    const id: string = customProps.match.params.id ? customProps.match.params.id : ''; // from current url (react-router)
+    const selectedPlan: Plan = state.plans[id];
+    const selectedExercises: Exercise[] = [];
 
     return {
         isLoading: false,
         isDeleting: false,
         selectedPlan,
-        selectedExercises: state.exercise_selection,
         exercises: state.exercise.exercises,
+        selectedExercises,
         initialValues: {
             name: selectedPlan ? selectedPlan.name : '',
             createdAt: selectedPlan ? selectedPlan.createdAt : ''
@@ -116,6 +131,6 @@ function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
 }
 
 const PlanListItemForm = reduxForm(
-    {form: 'PlanListItemForm'}, mapStateToProps)(PlanListItem);
+    {form: 'PlanListItemForm'})(PlanListItem);
 
 export default withRouter(connect(mapStateToProps, {fetchPlan, fetchExercises, savePlan})(PlanListItemForm));

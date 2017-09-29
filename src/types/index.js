@@ -19,12 +19,14 @@ export type PlanId = string;
 export type Plan = {
     id: PlanId,
     name: string,
-    exercises: string[], // just the ids
+    exercises: ExerciseId[], // just the ids
     createdAt: string
 };
 
-
-export type Exercises = { [string]: Exercise };
+/**
+ * helper object to keep the exercises in the state
+ */
+export type Exercises = { [ExerciseId]: Exercise };
 
 export type ExerciseState = {
     exercises: Exercises,
@@ -45,14 +47,10 @@ export type ExerciseSelection = {
 }
 
 // der Planstate ist ein Objekt mit den Plan-Objekten (Zugriff ueber die Plan-Id)
-export type PlanState = { [id: PlanId]: Plan };
-
-// 0: "abc", 1: "xyz"
-export type ExerciseSelectionState = ExerciseSelection;
+export type PlanState = { [id: string]: Plan };
 
 export type State = {
     exercise: ExerciseState,
     plans: PlanState,
     selection: SelectionState,
-    exercise_selection: Object
 };

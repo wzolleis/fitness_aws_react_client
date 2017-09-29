@@ -4,7 +4,6 @@ import exerciseReducer from "./ExerciseReducer";
 import userReducer from "./UserReducer";
 import {planReducer} from "./PlanReducer";
 import {selectionReducer} from './SelectionReducer';
-import {exerciseSelectionReducer} from './ExerciseSelectionReducer';
 
 
 const rootReducer = combineReducers({
@@ -13,7 +12,6 @@ const rootReducer = combineReducers({
     user: userReducer,
     plans: planReducer,
     selection: selectionReducer,
-    exercise_selection: exerciseSelectionReducer,
     form: formReducer
 });
 

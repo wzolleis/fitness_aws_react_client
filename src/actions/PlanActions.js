@@ -39,8 +39,6 @@ export function savePlan(plan: Plan, exercises: ExerciseId[]) {
         exercises
     };
 
-    console.log(plan_to_save);
-
     const apiRequest = invokeApig({
         path: config.apiPath.PLANS + `/${plan.id}`,
         method: 'PUT',

@@ -40,9 +40,7 @@
     "flow-bin": "^0.55.0",
     "flow-typed": "^2.1.5",
     "jquery": "^2.2.1",
-    "jsdom": "^8.1.0",
-    "mocha": "^2.4.5",
-    "react-addons-test-utils": "^0.14.7"
+    "jsdom": "^8.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

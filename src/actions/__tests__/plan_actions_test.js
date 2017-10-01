@@ -1,5 +1,5 @@
-jest.mock('../libs/awsLib');
-import {fetchPlan} from './PlanActions';
+jest.mock('../..//libs/awsLib');
+import {fetchPlan} from '../PlanActions';
 
 describe('actions', () => {
 

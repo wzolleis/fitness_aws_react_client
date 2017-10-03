@@ -25,10 +25,10 @@ export function fetchPlan(id: PlanId) {
     }
 }
 
-export function updateExerciseSelection(id: ExerciseId): Action {
+export function updateExerciseSelection(planId: PlanId, exerciseId: ExerciseId): Action {
     return {
         type: UPDATE_EXERCISE_SELECTION,
-        payload: {id}
+        payload: {planId, exerciseId}
 
     }
 }

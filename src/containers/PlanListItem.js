@@ -5,13 +5,14 @@ import {withRouter} from "react-router-dom";
 import React, {Component} from 'react';
 import _ from 'lodash';
 import type {ContextRouter} from 'react-router-dom';
-import type {Exercises, ExerciseId, Exercise, Plan, State} from '../types';
+import type {Exercises, Exercise, Plan, State} from '../types';
 import {fetchExercises} from "../actions/ExerciseActions";
 import {fetchPlan, savePlan, updateExerciseSelection} from '../actions/PlanActions';
 import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
+import type {ExerciseId, PlanId} from "../types/index";
 
-type PlanListItemProps = FormProps & {
+export type PlanListItemProps = FormProps & {
     selectedExercises: Exercise[],
     selectedPlan: Plan,
     handleDelete: Plan => void,
@@ -65,22 +66,24 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         }
     };
 
-    isExerciseSelected: Exercise => boolean = (exercise) => {
-        return !_.isNil(_.find(this.props.selectedExercises, {id: exercise.id}));
+    isExerciseSelected: Exercise => boolean = (exercise: Exercise) => {
+        const exerciseId: ExerciseId = exercise.id;
+        const selectedExercises: Exercise[] = this.props.selectedExercises;
+        return selectedExercises.includes(exerciseId);
     };
 
     // FlowFixMe - event-type ist unbekannt
-    updateExerciseSelection = (event) => {
-        const id = '';
-        this.props.updateExerciseSelection(id);
+    updateExerciseSelection = (event, id) => {
+        const planId: PlanId = this.props.match.params.id;
+        this.props.updateExerciseSelection(planId, id);
     };
 
     renderExercisesList(exercises: Exercises) {
         return _.map(exercises, exercise => {
             const className: string = this.isExerciseSelected(exercise) ? 'list-group-item active' : 'list-group-item';
             return (
-                <li className="list-group-item active" key={exercise.id}
-                    onSelect={this.updateExerciseSelection(exercise.id)}>
+                <li className={className} key={exercise.id}
+                    onClick={(event) => this.updateExerciseSelection(event, exercise.id)}>
                     {exercise.name}
                 </li>
             )
@@ -89,6 +92,10 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 
 
     render() {
+        const selectedExercises: Exercise[] = this.props.selectedExercises;
+
+        // console.log(`---> render: exercises = ${selectedExercises}`);
+
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
@@ -123,13 +130,13 @@ type PlanListItemCustomProps = ContextRouter;
 function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
     const id: string = customProps.match.params.id ? customProps.match.params.id : ''; // from current url (react-router)
     const selectedPlan: Plan = state.plans[id];
-    const selectedExercises: Exercise[] = [];
+    const selectedExercises: Exercise[] = selectedPlan ? selectedPlan.exercises : []; //selectedPlan.exercises;
 
     return {
         isLoading: false,
         isDeleting: false,
         selectedPlan,
-        exercises: state.exercise.exercises,
+        exercises: state.exercise.exercises, // alle exercises
         selectedExercises,
         initialValues: {
             name: selectedPlan ? selectedPlan.name : '',

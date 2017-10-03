@@ -92,10 +92,6 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 
 
     render() {
-        const selectedExercises: Exercise[] = this.props.selectedExercises;
-
-        // console.log(`---> render: exercises = ${selectedExercises}`);
-
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>

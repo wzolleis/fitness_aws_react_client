@@ -54,9 +54,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 
         try {
             this.props.savePlan(
-                this.props.selectedPlan,
-                _.values(this.props.selectedExercises)
-                ,
+                this.props.selectedPlan
             );
             this.props.history.push('/plans');
         }

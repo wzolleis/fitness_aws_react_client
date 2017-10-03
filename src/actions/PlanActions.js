@@ -33,16 +33,12 @@ export function updateExerciseSelection(planId: PlanId, exerciseId: ExerciseId):
     }
 }
 
-export function savePlan(plan: Plan, exercises: ExerciseId[]) {
-    const plan_to_save: Plan = {
-        ...plan,
-        exercises
-    };
+export function savePlan(plan: Plan) {
 
     const apiRequest = invokeApig({
         path: config.apiPath.PLANS + `/${plan.id}`,
         method: 'PUT',
-        body: plan_to_save
+        body: plan
     });
 
     return {

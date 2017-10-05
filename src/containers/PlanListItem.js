@@ -66,8 +66,13 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 
     isExerciseSelected: Exercise => boolean = (exercise: Exercise) => {
         const exerciseId: ExerciseId = exercise.id;
-        const selectedExercises: Exercise[] = this.props.selectedExercises;
-        return selectedExercises.includes(exerciseId);
+        if (exerciseId) {
+            const selectedExercises: Exercise[] = this.props.selectedExercises;
+            return selectedExercises.includes(exerciseId);
+        }
+        else {
+            return false;
+        }
     };
 
     // FlowFixMe - event-type ist unbekannt
@@ -134,7 +139,8 @@ function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
         selectedExercises,
         initialValues: {
             name: selectedPlan ? selectedPlan.name : '',
-            createdAt: selectedPlan ? selectedPlan.createdAt : ''
+            createdAt: selectedPlan ? selectedPlan.createdAt : '',
+            selectedExercises: []
         }
     }
 }

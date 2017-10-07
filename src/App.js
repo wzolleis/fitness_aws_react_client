@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {Nav, NavItem, Navbar} from "react-bootstrap";
-import Routes from "./Routes";
+import Routes from "./routes/Routes";
 import {authUser, signOutUser} from "./libs/awsLib";
 import RouteNavItem from "./components/RouteNavItem";
 import "./App.css";
@@ -58,6 +58,9 @@ class App extends Component {
                         </Navbar.Brand>
                         <Navbar.Brand>
                             <Link to="/plans">Plans</Link>
+                        </Navbar.Brand>
+                        <Navbar.Brand>
+                            <Link to="/trainings">Training</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle/>
                     </Navbar.Header>

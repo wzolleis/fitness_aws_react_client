@@ -1,8 +1,10 @@
+// @flow weak
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchPlans} from "../actions/PlanActions";
-import type {PlanState} from "../types/index";
-import {Grid, Col, Row, Button} from "react-bootstrap";
+import {startTraining} from "../actions/TrainingActions";
+import type {Plan, PlanState} from "../types/index";
+import {Button, ListGroup, ListGroupItem} from "react-bootstrap";
 import _ from 'lodash';
 
 class TrainingList extends Component {
@@ -16,23 +18,28 @@ class TrainingList extends Component {
             margin: 5
         };
         return _.map(plans, plan => {
-            return <Row key={plan.id} className="show-grid">
-                <Col xs={12} md={8}>{plan.name}</Col>
-                <Col xs={6} md={4}>
-
-                    <Button style={buttonStyle} bsStyle="primary">Start...</Button>
-                </Col>
-            </Row>
+            return <ListGroupItem header={plan.name} key={plan.id}>
+                <div>
+                    <Button onClick={event => this.startTraining(event, plan)}
+                            style={buttonStyle} bsStyle="primary">Start...
+                    </Button>
+                </div>
+            </ListGroupItem>
         })
     }
 
     render() {
-        console.log(this.props.plans);
         return (<div>
-            <Grid>
+            <ListGroup>
                 {this.renderPlans(this.props.plans)}
-            </Grid>
+            </ListGroup>
         </div>)
+    }
+
+    startTraining(event, plan: Plan) {
+        if (event) {
+            event.preventDefault();
+        }
     }
 }
 
@@ -42,4 +49,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, {fetchPlans})(TrainingList);
+export default connect(mapStateToProps, {fetchPlans, startTraining: startTraining})(TrainingList);

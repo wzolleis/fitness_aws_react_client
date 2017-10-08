@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchPlans} from "../actions/PlanActions";
 import type {PlanState} from "../types/index";
-import {ListGroup, ListGroupItem} from "react-bootstrap";
+import {Grid, Col, Row, Button} from "react-bootstrap";
 import _ from 'lodash';
 
 class TrainingList extends Component {
@@ -12,18 +12,26 @@ class TrainingList extends Component {
     }
 
     renderPlans(plans: PlanState) {
+        const buttonStyle = {
+            margin: 5
+        };
         return _.map(plans, plan => {
-            return <ListGroupItem key={plan.id}>
-                Starte Training: {plan.name}</ListGroupItem>
+            return <Row key={plan.id} className="show-grid">
+                <Col xs={12} md={8}>{plan.name}</Col>
+                <Col xs={6} md={4}>
+
+                    <Button style={buttonStyle} bsStyle="primary">Start...</Button>
+                </Col>
+            </Row>
         })
     }
 
     render() {
         console.log(this.props.plans);
         return (<div>
-            <ListGroup>
+            <Grid>
                 {this.renderPlans(this.props.plans)}
-            </ListGroup>
+            </Grid>
         </div>)
     }
 }

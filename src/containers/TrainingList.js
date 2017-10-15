@@ -19,11 +19,9 @@ class TrainingList extends Component {
         };
         return _.map(plans, plan => {
             return <ListGroupItem header={plan.name} key={plan.id}>
-                <div>
                     <Button onClick={event => this.startTraining(event, plan)}
                             style={buttonStyle} bsStyle="primary">Start...
                     </Button>
-                </div>
             </ListGroupItem>
         })
     }

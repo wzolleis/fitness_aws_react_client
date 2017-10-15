@@ -1,25 +1,24 @@
 // @flow weak
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchPlans} from "../actions/PlanActions";
-import {startTraining} from "../actions/TrainingActions";
-import type {Plan, PlanState} from "../types/index";
+import {fetchTrainings, startTraining} from "../actions/TrainingActions";
+import type {Training, Trainings} from "../types/index";
 import {Button, ListGroup, ListGroupItem} from "react-bootstrap";
 import _ from 'lodash';
 
 class TrainingList extends Component {
 
     componentWillMount() {
-        this.props.fetchPlans();
+        this.props.fetchTrainings();
     }
 
-    renderPlans(plans: PlanState) {
+    renderTrainings(trainings: Trainings) {
         const buttonStyle = {
             margin: 5
         };
-        return _.map(plans, plan => {
-            return <ListGroupItem header={plan.name} key={plan.id}>
-                    <Button onClick={event => this.startTraining(event, plan)}
+        return _.map(trainings, training => {
+            return <ListGroupItem header={training.name} key={training.id}>
+                <Button onClick={event => this.startTraining(event, training)}
                             style={buttonStyle} bsStyle="primary">Start...
                     </Button>
             </ListGroupItem>
@@ -29,12 +28,12 @@ class TrainingList extends Component {
     render() {
         return (<div>
             <ListGroup>
-                {this.renderPlans(this.props.plans)}
+                {this.renderTrainings(this.props.trainings)}
             </ListGroup>
         </div>)
     }
 
-    startTraining(event, plan: Plan) {
+    startTraining(event, training: Training) {
         if (event) {
             event.preventDefault();
         }
@@ -42,9 +41,10 @@ class TrainingList extends Component {
 }
 
 function mapStateToProps(state) {
+    console.log('state = ', state);
     return {
-        plans: state.plans
+        trainings: state.training.trainings
     }
 }
 
-export default connect(mapStateToProps, {fetchPlans, startTraining: startTraining})(TrainingList);
+export default connect(mapStateToProps, {fetchTrainings, startTraining: startTraining})(TrainingList);

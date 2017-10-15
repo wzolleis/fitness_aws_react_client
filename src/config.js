@@ -15,6 +15,7 @@ export default {
     },
     apiPath: {
         EXERCISES: '/exercises',
-        PLANS: '/plans'
+        PLANS: '/plans',
+        TRAININGS: '/trainings'
     }
 };

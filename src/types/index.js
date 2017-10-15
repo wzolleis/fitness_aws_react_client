@@ -49,7 +49,23 @@ export type ExerciseState = {
 export type SelectionState = {
     activeExercise: ?Exercise,
     activePlan: ?Plan
+};
+
+export type TrainingId = string;
+
+export type Training = {
+    id: TrainingId,
+    name: string,
+    createdAt: string
 }
+
+export type Trainings = {
+    TrainingId: Training
+};
+
+export type TrainingState = {
+    trainings: Trainings
+};
 
 // der Planstate ist ein Objekt mit den Plan-Objekten (Zugriff ueber die Plan-Id)
 export type PlanState = { [id: string]: Plan };
@@ -60,5 +76,6 @@ export type PlanState = { [id: string]: Plan };
 export type State = {
     exercise: ExerciseState,
     plans: PlanState,
+    training: TrainingState,
     selection: SelectionState,
 };

@@ -11,6 +11,7 @@ const exerciseReducer = (state = initialState, action) => {
     switch (action.type) {
         case FETCH_EXERCISES:
         case RECEIVE_EXERCISES_SUCCESS:
+            // mapKeys Erzeugt ein Objekt mit den ids als Key, Value sind die Exercises
             const exercises = _.mapKeys(action.payload, 'id');
             return {
                 ...state, exercises: {...state.exercises, ...exercises}

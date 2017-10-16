@@ -56,12 +56,12 @@ export type TrainingId = string;
 export type Training = {
     id: TrainingId,
     name: string,
+    plan: string,
+    exercises: ExerciseId[],
     createdAt: string
 }
 
-export type Trainings = {
-    TrainingId: Training
-};
+export type Trainings = { [TrainingId]: Training };
 
 export type TrainingState = {
     trainings: Trainings

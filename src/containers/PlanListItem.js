@@ -84,10 +84,11 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
     renderExercisesList(exercises: Exercises) {
         return _.map(exercises, exercise => {
             const className: string = this.isExerciseSelected(exercise) ? 'list-group-item active' : 'list-group-item';
+            const index = _.indexOf(this.props.selectedExercises, exercise.id);
             return (
                 <li className={className} key={exercise.id}
                     onClick={(event) => this.updateExerciseSelection(event, exercise.id)}>
-                    {exercise.name}
+                    {index + 1}: {exercise.name} - {exercise.device}
                 </li>
             )
         });
@@ -129,7 +130,7 @@ type PlanListItemCustomProps = ContextRouter;
 function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
     const id: string = customProps.match.params.id ? customProps.match.params.id : ''; // from current url (react-router)
     const selectedPlan: Plan = state.plans[id];
-    const selectedExercises: Exercise[] = selectedPlan ? selectedPlan.exercises : []; //selectedPlan.exercises;
+    const selectedExercises: Exercise[] = selectedPlan ? selectedPlan.exercises : [];
 
     return {
         isLoading: false,

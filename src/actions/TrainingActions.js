@@ -14,7 +14,6 @@ export function createTraining(plan: Plan) {
         exercises: exercises
     };
 
-    console.log('training = ', training);
     const apiRequest = invokeApig({
         path: config.apiPath.TRAININGS,
         method: 'POST',

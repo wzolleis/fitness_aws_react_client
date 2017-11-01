@@ -3,10 +3,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchPlans} from "../actions/PlanActions";
 import {createTraining, startTraining, fetchTrainings} from "../actions/TrainingActions";
-import type {Plan, PlanState, State, TrainingState} from "../types/index";
+import type {Plan, PlanState, State, Training, TrainingState} from "../types/index";
 import {Button, ListGroup, ListGroupItem} from "react-bootstrap";
 import _ from 'lodash';
 import {withRouter} from "react-router-dom";
+import {toDateString} from "../utils/DateUtils";
 
 type TrainingListProps = {
     fetchPlans: () => void,
@@ -19,10 +20,19 @@ type TrainingListProps = {
 
 class TrainingList extends Component<TrainingListProps> {
 
-    trainingExists: (plan: Plan) => boolean = (plan) => {
+    findTrainingByPlan: (plan: Plan) => Training = (plan) => {
         // Objekt mit den plan-ids als key und den trainings als value
         const trainingByPlan = _.mapKeys(this.props.trainings.trainings, 'plan');
-        return trainingByPlan[plan.id] !== undefined;
+        return trainingByPlan[plan.id];
+    };
+
+    trainingExists: (plan: Plan) => boolean = (plan) => {
+        const trainingByPlan = this.findTrainingByPlan(plan);
+        return trainingByPlan !== undefined;
+    };
+
+    trainingStarted: (training: Training) => boolean = (training) => {
+
     };
 
     componentWillMount() {
@@ -30,18 +40,27 @@ class TrainingList extends Component<TrainingListProps> {
         this.props.fetchTrainings();
     }
 
+
     renderPlans(plans: PlanState) {
         const buttonStyle = {
             margin: 5
         };
+
+
         return _.map(plans, plan => {
+            const training = this.findTrainingByPlan(plan);
+
             if (this.trainingExists(plan)) {
                 return <ListGroupItem header={plan.name} key={plan.id}>
                     <Button onClick={event => this.startTraining(event, plan)}
                             style={buttonStyle} bsStyle="success">Start...
                     </Button>
                 </ListGroupItem>
-            } else {
+            } else if (this.trainingStarted(training)) {
+
+            }
+
+            else {
                 return <ListGroupItem header={plan.name} key={plan.id}>
                     <Button onClick={event => this.createTraining(event, plan)}
                             style={buttonStyle} bsStyle="primary">Create...
@@ -71,6 +90,8 @@ class TrainingList extends Component<TrainingListProps> {
     startTraining(event, training: Training) {
         if (event) {
             event.preventDefault();
+            const now = new Date();
+            console.log('now: ', toDateString(now));
             this.props.startTraining(training);
             this.props.history.push(`/training/${training.id}`);
         }

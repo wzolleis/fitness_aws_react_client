@@ -61,6 +61,11 @@ export type Training = {
     createdAt: string
 }
 
+//
+/**
+ * Trainings ist ein Objekt mit der Training-Id als key und dem Training als Value.
+ *
+ */
 export type Trainings = { [TrainingId]: Training };
 
 export type TrainingState = {

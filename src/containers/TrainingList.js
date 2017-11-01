@@ -7,7 +7,8 @@ import type {Plan, PlanState, State, Training, TrainingState} from "../types/ind
 import {Button, ListGroup, ListGroupItem} from "react-bootstrap";
 import _ from 'lodash';
 import {withRouter} from "react-router-dom";
-import {toDateString} from "../utils/DateUtils";
+import {parseDateString, toDateString} from "../utils/DateUtils";
+import moment from "moment";
 
 type TrainingListProps = {
     fetchPlans: () => void,
@@ -26,13 +27,19 @@ class TrainingList extends Component<TrainingListProps> {
         return trainingByPlan[plan.id];
     };
 
-    trainingExists: (plan: Plan) => boolean = (plan) => {
-        const trainingByPlan = this.findTrainingByPlan(plan);
-        return trainingByPlan !== undefined;
+    trainingExists: (training: Training) => boolean = (training) => {
+        return training !== undefined;
     };
 
     trainingStarted: (training: Training) => boolean = (training) => {
-
+        if (training && training.createdAt) {
+            const now: Date = new Date();
+            const trainingStart: Date = parseDateString(training.createdAt);
+            const trainingStarted: boolean = moment(now).isAfter(trainingStart);
+            console.log('training started: ', trainingStarted);
+            return trainingStarted;
+        }
+        return false;
     };
 
     componentWillMount() {
@@ -50,16 +57,21 @@ class TrainingList extends Component<TrainingListProps> {
         return _.map(plans, plan => {
             const training = this.findTrainingByPlan(plan);
 
-            if (this.trainingExists(plan)) {
+
+            if (this.trainingStarted(training)) {
+                return <ListGroupItem header={plan.name} key={plan.id}>
+                    <Button onClick={event => this.createTraining(event, plan)}
+                            style={buttonStyle} bsStyle="primary">Continue...
+                    </Button>
+                </ListGroupItem>
+            }
+            else if (this.trainingExists(training)) {
                 return <ListGroupItem header={plan.name} key={plan.id}>
                     <Button onClick={event => this.startTraining(event, plan)}
                             style={buttonStyle} bsStyle="success">Start...
                     </Button>
                 </ListGroupItem>
-            } else if (this.trainingStarted(training)) {
-
             }
-
             else {
                 return <ListGroupItem header={plan.name} key={plan.id}>
                     <Button onClick={event => this.createTraining(event, plan)}

@@ -1,16 +1,17 @@
 import type {ExerciseId, Plan, Training} from "../types/index";
 import {invokeApig} from "../libs/awsLib";
 import config from "../config";
+import {nowToDateString} from "../utils/DateUtils";
+import {FETCH_TRAININGS, SAVE_TRAINING, START_TRAINING} from "../types/index";
 
-export const FETCH_TRAININGS: string = 'FETCH_TRAININGS';
-export const SAVE_TRAINING: string = 'SAVE_TRAINING';
-export const START_TRAINING: string = 'START_TRAINING';
+
 
 export function createTraining(plan: Plan) {
     const exercises: ExerciseId[] = plan.exercises;
     const training: Training = {
         name: plan.name,
         plan: plan.id,
+        createdAt: nowToDateString(),
         exercises: exercises
     };
 

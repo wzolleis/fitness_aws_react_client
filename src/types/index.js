@@ -1,4 +1,9 @@
 // @flow
+
+export const START_TRAINING: string = 'START_TRAINING';
+export const FETCH_TRAININGS: string = 'FETCH_TRAININGS';
+export const SAVE_TRAINING: string = 'SAVE_TRAINING';
+
 export type ActionType =
     'RECEIVE_EXERCISES_SUCCESS'
     | 'EXERCISE_DELETED'
@@ -7,7 +12,10 @@ export type ActionType =
     | 'EXERCISE_SELECTED'
     | 'RESET_SELECTION'
     | 'PLAN_SELECTED'
-    | 'UPDATE_EXERCISE_SELECTION';
+    | 'UPDATE_EXERCISE_SELECTION'
+    | 'FETCH_TRAININGS'
+    | 'SAVE_TRAINING'
+    | START_TRAINING;
 
 export type Action = {
     type: ActionType,
@@ -52,11 +60,13 @@ export type SelectionState = {
 };
 
 export type TrainingId = string;
+export type Execution = string;
 
 export type Training = {
     id: TrainingId,
     name: string,
     plan: string,
+    executions: Execution[],
     exercises: ExerciseId[],
     createdAt: string
 }

@@ -1,6 +1,6 @@
 import type {Action, TrainingState} from "../types/index";
-import {FETCH_TRAININGS} from "../actions/TrainingActions";
 import _ from 'lodash';
+import {FETCH_TRAININGS} from "../types/index";
 
 const initialState: TrainingState = {
     trainings: {}

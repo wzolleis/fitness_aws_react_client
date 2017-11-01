@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchPlans} from "../actions/PlanActions";
 import {createTraining, startTraining, fetchTrainings} from "../actions/TrainingActions";
-import type {Plan, PlanState, State, Training, TrainingState} from "../types/index";
-import {Button, ListGroup, ListGroupItem} from "react-bootstrap";
+import type {Plan, PlanState, State, Training, Trainings, TrainingState} from "../types/index";
+import {Button, ListGroup, ListGroupItem, MenuItem, SplitButton} from "react-bootstrap";
 import _ from 'lodash';
 import {withRouter} from "react-router-dom";
 import {parseDateString, toDateString} from "../utils/DateUtils";
@@ -27,20 +27,22 @@ class TrainingList extends Component<TrainingListProps> {
         return trainingByPlan[plan.id];
     };
 
-    trainingExists: (training: Training) => boolean = (training) => {
+    doesTrainingExist: (training: Training) => boolean = (training) => {
         return training !== undefined;
     };
 
-    trainingStarted: (training: Training) => boolean = (training) => {
+    isTrainingStarted: (training: Training) => boolean = (training) => {
         if (training && training.createdAt) {
             const now: Date = new Date();
             const trainingStart: Date = parseDateString(training.createdAt);
-            const trainingStarted: boolean = moment(now).isAfter(trainingStart);
-            console.log('training started: ', trainingStarted);
-            return trainingStarted;
+            return moment(now).isAfter(trainingStart);
         }
         return false;
     };
+
+    isTrainingFinished: (training: Training) => boolean = (training) => {
+        return (training && training.finishedAt);
+    }
 
     componentWillMount() {
         this.props.fetchPlans();
@@ -48,46 +50,71 @@ class TrainingList extends Component<TrainingListProps> {
     }
 
 
-    renderPlans(plans: PlanState) {
+    renderTrainings(trainings: Trainings) {
         const buttonStyle = {
             margin: 5
         };
 
+        const components =
+            _.map(_.values(trainings), training => {
+                if (this.isTrainingStarted(training)) {
+                    return <ListGroupItem header={training.name} key={training.id}>
+                        <Button onClick={event => this.continueTraining(event, training)}
+                                style={buttonStyle} bsStyle="primary">Continue...
+                        </Button>
+                    </ListGroupItem>
+                }
+                else if (this.isTrainingFinished(training)) {
+                    return <ListGroupItem header={training.name} key={training.id}>
+                        <Button onClick={event => this.startTraining(event, training)}
+                                style={buttonStyle} bsStyle="success">Start...
+                        </Button>
+                    </ListGroupItem>
+                }
+                else {
+                    return null;
+                }
+            });
 
-        return _.map(plans, plan => {
-            const training = this.findTrainingByPlan(plan);
 
-
-            if (this.trainingStarted(training)) {
-                return <ListGroupItem header={plan.name} key={plan.id}>
-                    <Button onClick={event => this.createTraining(event, plan)}
-                            style={buttonStyle} bsStyle="primary">Continue...
-                    </Button>
-                </ListGroupItem>
-            }
-            else if (this.trainingExists(training)) {
-                return <ListGroupItem header={plan.name} key={plan.id}>
-                    <Button onClick={event => this.startTraining(event, plan)}
-                            style={buttonStyle} bsStyle="success">Start...
-                    </Button>
-                </ListGroupItem>
-            }
-            else {
-                return <ListGroupItem header={plan.name} key={plan.id}>
-                    <Button onClick={event => this.createTraining(event, plan)}
-                            style={buttonStyle} bsStyle="primary">Create...
-                    </Button>
-                </ListGroupItem>
-            }
-
-        })
+        return components;
     }
+
+    findPlansWithoutTraining(plans: PlanState): Plan[] {
+        const planList: Plan[] = _.values(plans);
+        return _.filter(planList, p => {
+            return !this.doesTrainingExist(this.findTrainingByPlan(p));
+        });
+    }
+
+    renderCreateTrainingWithPlan(plansWithoutTraining: PlanState) {
+        return _.map(plansWithoutTraining, plan => {
+            return <MenuItem onClick={event => this.createTraining(event, plan)} eventKey={plan.id} key={plan.id}>
+                {plan.name}
+            </MenuItem>
+        });
+    }
+
+    renderCreateTrainingForPlan(plans: PlanState) {
+        const plansWithoutTraining: Plan[] = this.findPlansWithoutTraining(this.props.plans);
+
+        if (plansWithoutTraining && plansWithoutTraining.length > 0) {
+            return <div>
+                <SplitButton bsStyle='primary' title='Create Training' key='create-training' id='create-training'>
+                    {this.renderCreateTrainingWithPlan(plansWithoutTraining)}
+                </SplitButton>
+            </div>
+        }
+        return null;
+    }
+
 
     render() {
         return (<div>
             <ListGroup>
-                {this.renderPlans(this.props.plans)}
+                {this.renderTrainings(this.props.trainings.trainings)}
             </ListGroup>
+            {this.renderCreateTrainingForPlan(this.props.plans)}
         </div>)
     }
 
@@ -106,6 +133,13 @@ class TrainingList extends Component<TrainingListProps> {
             console.log('now: ', toDateString(now));
             this.props.startTraining(training);
             this.props.history.push(`/training/${training.id}`);
+        }
+    }
+
+    continueTraining(event, training: Training) {
+        if (event) {
+            event.preventDefault();
+            console.log('continue training: ', training);
         }
     }
 }

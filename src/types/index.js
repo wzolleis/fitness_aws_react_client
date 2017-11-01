@@ -68,7 +68,8 @@ export type Training = {
     plan: string,
     executions: Execution[],
     exercises: ExerciseId[],
-    createdAt: string
+    createdAt: string,
+    finishedAt: string
 }
 
 //

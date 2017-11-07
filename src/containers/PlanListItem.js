@@ -11,7 +11,6 @@ import {fetchPlan, savePlan, updateExerciseSelection} from '../actions/PlanActio
 import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
-import {Button} from "react-bootstrap";
 
 export type PlanListItemProps = FormProps & {
     selectedExercises: Exercise[],

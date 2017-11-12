@@ -11,7 +11,8 @@ import {fetchPlan, savePlan, updateExerciseSelection} from '../actions/PlanActio
 import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
-import {Table} from "react-bootstrap";
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+
 
 export type PlanListItemProps = FormProps & {
     selectedExercises: Exercise[],
@@ -27,6 +28,13 @@ export type PlanListItemProps = FormProps & {
 type PlanListItemState = {
     isLoading: boolean,
     isDeleting: boolean,
+}
+
+type ExerciseTableData = {
+    id: string,
+    name: string,
+    device: string,
+    index: number
 }
 
 class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
@@ -82,38 +90,36 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         this.props.updateExerciseSelection(planId, id);
     };
 
-    renderExercisesList(exercises: Exercises) {
+    renderExerciseTable = () => {
+        const exerciseTableData: ExerciseTableData[] = this.buildExerciseTableData(this.props.exercises);
+
+        return (<BootstrapTable version='4' data={exerciseTableData}>
+            <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
+            <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
+            <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
+        </BootstrapTable>);
+    };
+
+    buildExerciseTableData(exercises: Exercises): ExerciseTableData[] {
         return _.map(exercises, exercise => {
-            const className: string = this.isExerciseSelected(exercise) ? 'list-group-item active' : 'list-group-item';
             const index = _.indexOf(this.props.selectedExercises, exercise.id);
-            return (
-                <tr onClick={(event) => this.updateExerciseSelection(event, exercise.id)}>
-                    <td>{index}</td>
-                    <td>{exercise.name}</td>
-                    <td>{exercise.device}</td>
-                </tr>
-            )
+            return {
+                id: exercise.id,
+                index,
+                name: exercise.name,
+                device: exercise.device
+            }
         });
     }
 
-
     render() {
+
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
                 <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
-                <Table striped bordered condensed hover>
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Gerätenummer</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.renderExercisesList(this.props.exercises)}
-                    </tbody>
-                </Table>
+                <Field name='exercises' id='selectedPlan.exercises' component={this.renderExerciseTable}/>
+
                 <LoaderButton
                     block
                     bsStyle="primary"

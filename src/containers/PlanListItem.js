@@ -11,6 +11,7 @@ import {fetchPlan, savePlan, updateExerciseSelection} from '../actions/PlanActio
 import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
+import {Table} from "react-bootstrap";
 
 export type PlanListItemProps = FormProps & {
     selectedExercises: Exercise[],
@@ -86,10 +87,11 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
             const className: string = this.isExerciseSelected(exercise) ? 'list-group-item active' : 'list-group-item';
             const index = _.indexOf(this.props.selectedExercises, exercise.id);
             return (
-                <li className={className} key={exercise.id}
-                    onClick={(event) => this.updateExerciseSelection(event, exercise.id)}>
-                    {index + 1}: {exercise.name} - {exercise.device}
-                </li>
+                <tr onClick={(event) => this.updateExerciseSelection(event, exercise.id)}>
+                    <td>{index}</td>
+                    <td>{exercise.name}</td>
+                    <td>{exercise.device}</td>
+                </tr>
             )
         });
     }
@@ -100,9 +102,18 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
             <Form onSubmit={this.handleSubmit}>
                 <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
                 <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
-                <ul className="list-group">
+                <Table striped bordered condensed hover>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Gerätenummer</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {this.renderExercisesList(this.props.exercises)}
-                </ul>
+                    </tbody>
+                </Table>
                 <LoaderButton
                     block
                     bsStyle="primary"

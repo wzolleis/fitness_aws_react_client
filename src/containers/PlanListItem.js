@@ -34,7 +34,8 @@ type ExerciseTableData = {
     id: string,
     name: string,
     device: string,
-    index: number
+    index: number,
+    selected: boolean
 }
 
 class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
@@ -85,19 +86,39 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
     };
 
     // FlowFixMe - event-type ist unbekannt
-    updateExerciseSelection = (event, id) => {
+    updateExerciseSelection = (row) => {
+        const id: ExerciseId = row.id;
         const planId: PlanId = this.props.match.params.id;
+        console.log('update sel: ', id);
         this.props.updateExerciseSelection(planId, id);
     };
 
     renderExerciseTable = () => {
         const exerciseTableData: ExerciseTableData[] = this.buildExerciseTableData(this.props.exercises);
+        const selectedTableData: ExerciseTableData[] = _.filter(exerciseTableData, exercise => {
+            return exercise.selected === true
+        });
+        const selectedDeviceNumbers: number[] = _.map(selectedTableData, 'device');
 
-        return (<BootstrapTable version='4' data={exerciseTableData}>
-            <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
-            <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-            <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
-        </BootstrapTable>);
+        const selectRowProp = {
+            mode: 'checkbox',
+            clickToSelect: true,  // enable click to select
+            selected: selectedDeviceNumbers,
+            onSelect: this.updateExerciseSelection,
+        };
+
+        const options = {
+            onRowClick: this.updateExerciseSelection
+        };
+
+        return (
+            <BootstrapTable striped hover version='4' data={exerciseTableData} selectRow={selectRowProp}
+                            options={options}>
+                <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
+                <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
+            </BootstrapTable>
+        );
     };
 
     buildExerciseTableData(exercises: Exercises): ExerciseTableData[] {
@@ -107,7 +128,8 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
                 id: exercise.id,
                 index,
                 name: exercise.name,
-                device: exercise.device
+                device: exercise.device,
+                selected: index >= 0
             }
         });
     }

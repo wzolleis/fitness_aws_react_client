@@ -12,6 +12,7 @@ import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import './PlanListItem.css'
 
 
 export type PlanListItemProps = FormProps & {
@@ -98,6 +99,8 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         const selectedTableData: ExerciseTableData[] = _.filter(exerciseTableData, exercise => {
             return exercise.selected === true
         });
+
+        // Geraetenummer ist der Key in der Excercise-Tabelle
         const selectedDeviceNumbers: number[] = _.map(selectedTableData, 'device');
 
         const selectRowProp = {
@@ -112,6 +115,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         };
 
         return (
+
             <BootstrapTable striped hover version='4' data={exerciseTableData} selectRow={selectRowProp}
                             options={options}>
                 <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
@@ -137,29 +141,31 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
     render() {
 
         return (
-            <Form onSubmit={this.handleSubmit}>
-                <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
-                <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
-                <Field name='exercises' id='selectedPlan.exercises' component={this.renderExerciseTable}/>
-
-                <LoaderButton
-                    block
-                    bsStyle="primary"
-                    bsSize="large"
-                    type="submit"
-                    isLoading={this.props.isLoading}
-                    text="Save"
-                    loadingText="Saving…"/>
-                <LoaderButton
-                    block
-                    bsStyle="danger"
-                    bsSize="large"
-                    isLoading={this.props.isDeleting}
-                    onClick={this.handleDelete}
-                    text="Delete"
-                    loadingText="Deleting…"/>
-
-            </Form>
+            <div className='plan'>
+                <Form onSubmit={this.handleSubmit}>
+                    <Field name='name' id='selectedPlan.name' label='Name' component={this.renderField}/>
+                    <Field name='createdAt' id='selectedPlan.createdAt' label='Angelegt' component={this.renderField}/>
+                    <Field name='exercises' id='selectedPlan.exercises' component={this.renderExerciseTable}/>
+                    <div className='buttons'>
+                        <LoaderButton
+                            block
+                            bsStyle="primary"
+                            bsSize="large"
+                            type="submit"
+                            isLoading={this.props.isLoading}
+                            text="Save"
+                            loadingText="Saving…"/>
+                        <LoaderButton
+                            block
+                            bsStyle="danger"
+                            bsSize="large"
+                            isLoading={this.props.isDeleting}
+                            onClick={this.handleDelete}
+                            text="Delete"
+                            loadingText="Deleting…"/>
+                    </div>
+                </Form>
+            </div>
         );
     }
 }

@@ -36,6 +36,7 @@ type ExerciseTableData = {
     name: string,
     device: string,
     index: number,
+    weight: string,
     selected: boolean
 }
 
@@ -121,6 +122,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
                 <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
                 <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
                 <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
+                <TableHeaderColumn dataField='weight'>Gewicht</TableHeaderColumn>
             </BootstrapTable>
         );
     };
@@ -133,6 +135,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
                 index,
                 name: exercise.name,
                 device: exercise.device,
+                weight: exercise.weight,
                 selected: index >= 0
             }
         });

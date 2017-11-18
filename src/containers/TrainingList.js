@@ -149,7 +149,7 @@ class TrainingList extends Component<TrainingListProps> {
             const now = new Date();
             console.log('now: ', toDateString(now));
             this.props.startTraining(training);
-            this.props.history.push(`/training/${training.id}`);
+            this.props.history.push(`/trainings/${training.id}`);
         }
     }
 

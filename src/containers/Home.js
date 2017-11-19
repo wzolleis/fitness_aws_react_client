@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {PageHeader} from 'react-bootstrap';
-import './Home.css';
 import {connect} from "react-redux";
 import {fetchExercises, receivedExercises} from "../actions/ExerciseActions";
 import ExerciseItemListForm from "./ExerciseItemListForm";

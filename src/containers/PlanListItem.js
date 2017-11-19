@@ -46,6 +46,41 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         this.props.fetchExercises();
     };
 
+    renderExerciseTable = () => {
+        const exerciseTableData: ExerciseTableData[] = this.buildExerciseTableData(this.props.exercises);
+        const selectedTableData: ExerciseTableData[] = _.filter(exerciseTableData, exercise => {
+            return exercise.selected === true
+        });
+
+        // Geraetenummer ist der Key in der Excercise-Tabelle
+        const selectedDeviceNumbers: number[] = _.map(selectedTableData, 'device');
+
+        console.log('raw exercises = ', this.props.exercises);
+        console.log('exercises = ', exerciseTableData);
+
+        const selectRowProp = {
+            mode: 'checkbox',
+            clickToSelect: true,  // enable click to select
+            selected: selectedDeviceNumbers,
+            onSelect: this.updateExerciseSelection,
+        };
+
+        const options = {
+            onRowClick: this.updateExerciseSelection
+        };
+
+        return (
+
+            <BootstrapTable striped hover version='4' data={exerciseTableData} selectRow={selectRowProp}
+                            options={options}>
+                <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
+                <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
+                <TableHeaderColumn dataField='weight'>Gewicht</TableHeaderColumn>
+            </BootstrapTable>
+        );
+    };
+
     // $FlowFixMe
     renderField = (field) => {
         return (
@@ -83,37 +118,11 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         this.props.updateExerciseSelection(planId, id);
     };
 
-    renderExerciseTable = () => {
-        const exerciseTableData: ExerciseTableData[] = this.buildExerciseTableData(this.props.exercises);
-        const selectedTableData: ExerciseTableData[] = _.filter(exerciseTableData, exercise => {
-            return exercise.selected === true
-        });
-
-        // Geraetenummer ist der Key in der Excercise-Tabelle
-        const selectedDeviceNumbers: number[] = _.map(selectedTableData, 'device');
-
-        const selectRowProp = {
-            mode: 'checkbox',
-            clickToSelect: true,  // enable click to select
-            selected: selectedDeviceNumbers,
-            onSelect: this.updateExerciseSelection,
-        };
-
-        const options = {
-            onRowClick: this.updateExerciseSelection
-        };
-
-        return (
-
-            <BootstrapTable striped hover version='4' data={exerciseTableData} selectRow={selectRowProp}
-                            options={options}>
-                <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
-                <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-                <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
-                <TableHeaderColumn dataField='weight'>Gewicht</TableHeaderColumn>
-            </BootstrapTable>
-        );
-    };
+    shouldComponentUpdate(nextProps: PlanListItemProps, nextState) {
+        const flag: boolean = _.size(nextProps.exercises) !== _.size(this.props.exercises);
+        console.log('flag', flag);
+        return (_.size(nextProps.exercises) !== _.size(this.props.exercises));
+    }
 
     buildExerciseTableData(exercises: Exercises): ExerciseTableData[] {
         return _.map(exercises, exercise => {

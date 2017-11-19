@@ -1,13 +1,13 @@
 import React, {Component} from "react";
-import {Link, withRouter} from "react-router-dom";
-import {Nav, NavItem, Navbar} from "react-bootstrap";
+import {withRouter} from "react-router-dom";
 import Routes from "./routes/Routes";
 import {authUser, signOutUser} from "./libs/awsLib";
-import RouteNavItem from "./components/RouteNavItem";
+//import RouteNavItem from "./components/RouteNavItem";
 import "./App.css";
 import {userHasAuthenticated} from "./actions/UserActions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import Navigation from './Navigation';
 
 class App extends Component {
     userHasAuthenticated = authenticated => {
@@ -51,34 +51,7 @@ class App extends Component {
         return (
             !this.props.isAuthenticating &&
             <div className="App container">
-                <Navbar fluid collapseOnSelect>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            <Link to="/">Exercises</Link>
-                        </Navbar.Brand>
-                        <Navbar.Brand>
-                            <Link to="/plans">Plans</Link>
-                        </Navbar.Brand>
-                        <Navbar.Brand>
-                            <Link to="/trainings">Training</Link>
-                        </Navbar.Brand>
-                        <Navbar.Toggle/>
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav pullRight>
-                            {this.props.isAuthenticated
-                                ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
-                                : [
-                                    <RouteNavItem key={1} href="/signup">
-                                        Signup
-                                    </RouteNavItem>,
-                                    <RouteNavItem key={2} href="/login">
-                                        Login
-                                    </RouteNavItem>
-                                ]}
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+                <Navigation childProps={childProps}/>
                 <Routes childProps={childProps}/>
             </div>
         );

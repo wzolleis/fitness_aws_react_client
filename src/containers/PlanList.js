@@ -6,6 +6,7 @@ import {planSelected} from "../actions/SelectionActions";
 import {withRouter} from 'react-router-dom';
 import * as _ from "lodash";
 import type {Plan} from "../types/index";
+import {Button, Col, Grid, Row, Well} from "react-bootstrap";
 
 
 class PlanList extends Component {
@@ -16,6 +17,20 @@ class PlanList extends Component {
     handlePlanClick = (event, plan) => {
         this.props.planSelected(plan);
         this.props.history.push(event.currentTarget.getAttribute('href'));
+    };
+
+    mapPlanToComponent = (plan: Plan) => {
+        return plan.id === 'new_plan' ?
+            (<div key='new'
+                  onClick={event => this.handlePlanClick(event, plan)}
+                  href={'/plans/new'}>
+                <Well>{plan.name}</Well>
+            </div>) :
+            (<div key={plan.id}
+                  onClick={event => this.handlePlanClick(event, plan)}
+                  href={`/plans/${plan.id}`}>
+                <Well>{plan.name}</Well>
+            </div>)
     };
 
     renderPlans = (plans) => {
@@ -33,23 +48,22 @@ class PlanList extends Component {
             dummy,
             ...plans
         };
-
+        const buttonStyle = {
+            margin: 5
+        };
         return _.map(myPlans, plan => {
-            return plan.id === 'new_plan' ?
-                (<div key='new'
-                      onClick={(event => this.handlePlanClick(event, plan))}
-                      href={'/plans/new'}>
-                    <li className='list-group-item'>
-                        {plan.name}
-                    </li>
-                </div>) :
-                (<div key={plan.id}
-                     onClick={(event => this.handlePlanClick(event, plan))}
-                     href={`/plans/${plan.id}`}>
-                    <li className='list-group-item'>
-                        {plan.name}
-                    </li>
-                </div>)
+            return <Grid key={plan.id}>
+                <Row>
+                    <Col xs={8} md={6}>
+                        {this.mapPlanToComponent(plan)}
+                    </Col>
+                    <Col xs={4} md={6}>
+                        <Button onClick={event => this.startTraining(event, plan)}
+                                style={buttonStyle} bsStyle="success">Start...
+                        </Button>
+                    </Col>
+                </Row>
+            </Grid>
         });
     };
 
@@ -61,9 +75,7 @@ class PlanList extends Component {
         return (
             <div>
                 <h3>Plans</h3>
-                <ul className='list-group'>
-                    {this.renderPlans(plans)}
-                </ul>
+                {this.renderPlans(plans)}
             </div>
         );
     }

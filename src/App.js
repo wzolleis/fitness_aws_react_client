@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
 import Routes from "./routes/Routes";
 import {authUser, signOutUser} from "./libs/awsLib";
-//import RouteNavItem from "./components/RouteNavItem";
 import "./App.css";
 import {userHasAuthenticated} from "./actions/UserActions";
 import {bindActionCreators} from "redux";

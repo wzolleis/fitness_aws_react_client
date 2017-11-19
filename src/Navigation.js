@@ -5,8 +5,8 @@ class Navigation extends Component {
     render() {
         return (
             <div>
-                <nav className="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-                    <div className="container">
+                <nav className="navbar navbar-expand-sm bg-dark navbar-dark justify-content-end fixed-top mb-3">
+                    <div className="container-fluid">
                         <button className="navbar-toggler" data-toggle='collapse' data-target='#navbarCcollapse'>
                             <span className="navbar-toggler-icon"></span>
                         </button>

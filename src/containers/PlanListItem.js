@@ -65,7 +65,8 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 
         try {
             this.props.savePlan(this.props.selectedPlan);
-            this.props.history.push('/plans');
+            this.props.fetchPlan(this.props.selectedPlan.id);
+            this.props.history.push('/');
         }
         catch (e) {
             alert(e);

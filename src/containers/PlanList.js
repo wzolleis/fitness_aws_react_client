@@ -19,6 +19,10 @@ class PlanList extends Component {
         this.props.history.push(event.currentTarget.getAttribute('href'));
     };
 
+    startTraining = (event, plan) => {
+
+    }
+
     mapPlanToComponent = (plan: Plan) => {
         return plan.id === 'new_plan' ?
             (<div key='new'

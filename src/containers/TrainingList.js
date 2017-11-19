@@ -7,8 +7,8 @@ import type {Plan, PlanState, State, Training, Trainings, TrainingState} from ".
 import {Button, ListGroup, ListGroupItem, MenuItem, SplitButton} from "react-bootstrap";
 import _ from 'lodash';
 import {withRouter} from "react-router-dom";
-import {parseDateString, toDateString} from "../utils/DateUtils";
-import moment from "moment";
+import {toDateString} from "../utils/DateUtils";
+import {findPlansWithoutTraining, isTrainingFinished, isTrainingStarted} from "../utils/TrainingUtils";
 
 type TrainingListProps = {
     fetchPlans: () => void,
@@ -20,30 +20,6 @@ type TrainingListProps = {
 }
 
 class TrainingList extends Component<TrainingListProps> {
-
-    findTrainingByPlan: (plan: Plan) => Training = (plan) => {
-        // Objekt mit den plan-ids als key und den trainings als value
-        const trainingByPlan = _.mapKeys(this.props.trainings.trainings, 'plan');
-        return trainingByPlan[plan.id];
-    };
-
-    doesTrainingExist: (training: Training) => boolean = (training) => {
-        return training !== undefined;
-    };
-
-    isTrainingStarted: (training: Training) => boolean = (training) => {
-        if (training && training.createdAt) {
-            const now: Date = new Date();
-            const trainingStart: Date = parseDateString(training.createdAt);
-            return moment(now).isAfter(trainingStart);
-        }
-        return false;
-    };
-
-    isTrainingFinished: (training: Training) => boolean = (training) => {
-        return (training && training.finishedAt);
-    };
-
     componentWillMount() {
         this.props.fetchPlans();
         this.props.fetchTrainings();
@@ -58,42 +34,27 @@ class TrainingList extends Component<TrainingListProps> {
             margin: 5
         };
 
-        const components =
-            _.map(_.values(trainings), training => {
-                if (this.isTrainingFinished(training)) {
-                    return <ListGroupItem header={training.name} key={training.id}>
-                        <Button onClick={event => this.startTraining(event, training)}
-                                style={buttonStyle} bsStyle="success">Start...
-                        </Button>
-                    </ListGroupItem>
-                }
-                else if (this.isTrainingStarted(training)) {
-                    return <ListGroupItem header={training.name} key={training.id}>
-                        <Button onClick={event => this.continueTraining(event, training)}
-                                style={buttonStyle} bsStyle="primary">Continue...
-                        </Button>
-                    </ListGroupItem>
-                }
-                else {
-                    return null;
-                }
-            });
-
-
-        return components;
-    }
-
-    /**
-     * Suche nach Plaenen, die keinen Eintrag in den Trainings besitzen
-     * @param plans Die Plaene
-     * @return Die Plaene, die kein Training besitzten
-     */
-    findPlansWithoutTraining(plans: PlanState): Plan[] {
-        const planList: Plan[] = _.values(plans);
-        return _.filter(planList, p => {
-            return !this.doesTrainingExist(this.findTrainingByPlan(p));
+        return _.map(_.values(trainings), training => {
+            if (isTrainingFinished(training)) {
+                return <ListGroupItem header={training.name} key={training.id}>
+                    <Button onClick={event => this.startTraining(event, training)}
+                            style={buttonStyle} bsStyle="success">Start...
+                    </Button>
+                </ListGroupItem>
+            }
+            else if (isTrainingStarted(training)) {
+                return <ListGroupItem header={training.name} key={training.id}>
+                    <Button onClick={event => this.continueTraining(event, training)}
+                            style={buttonStyle} bsStyle="primary">Continue...
+                    </Button>
+                </ListGroupItem>
+            }
+            else {
+                return null;
+            }
         });
     }
+
 
     /**
      * Erzeugt ein MenuItem fuer einen Plan
@@ -113,7 +74,7 @@ class TrainingList extends Component<TrainingListProps> {
      * @returns Die Komponente zum Erzeugen eines Trainings (DropDown)
      */
     renderCreateTrainingForPlan(plans: PlanState) {
-        const plansWithoutTraining: Plan[] = this.findPlansWithoutTraining(plans);
+        const plansWithoutTraining: Plan[] = findPlansWithoutTraining(plans, this.props.trainings.trainings);
 
         if (plansWithoutTraining && plansWithoutTraining.length > 0) {
             return <div>

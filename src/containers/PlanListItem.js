@@ -12,7 +12,6 @@ import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import './PlanListItem.css'
 
 
 export type PlanListItemProps = FormProps & {
@@ -73,17 +72,6 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         catch (e) {
             alert(e);
             this.setState({isLoading: false});
-        }
-    };
-
-    isExerciseSelected: Exercise => boolean = (exercise: Exercise) => {
-        const exerciseId: ExerciseId = exercise.id;
-        if (exerciseId) {
-            const selectedExercises: Exercise[] = this.props.selectedExercises;
-            return selectedExercises.includes(exerciseId);
-        }
-        else {
-            return false;
         }
     };
 
@@ -179,6 +167,7 @@ function mapStateToProps(state: State, customProps: PlanListItemCustomProps) {
     const id: string = customProps.match.params.id ? customProps.match.params.id : ''; // from current url (react-router)
     const selectedPlan: Plan = state.plans[id];
     const selectedExercises: Exercise[] = selectedPlan ? selectedPlan.exercises : [];
+
 
     return {
         isLoading: false,

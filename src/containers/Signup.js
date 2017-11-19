@@ -11,7 +11,6 @@ import {
 } from "amazon-cognito-identity-js";
 import LoaderButton from "../components/LoaderButton";
 import config from "../config";
-import "./Signup.css";
 
 export default class Signup extends Component {
     handleChange = event => {

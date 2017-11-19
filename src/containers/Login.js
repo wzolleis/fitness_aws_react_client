@@ -7,7 +7,6 @@ import {
 import {FormGroup, FormControl, ControlLabel} from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import config from "../config";
-import "./Login.css";
 
 export default class Login extends Component {
     handleChange = event => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import LoaderButton from '../components/LoaderButton';
-import './NewExercise.css';
 import {invokeApig} from "../libs/awsLib";
 import {FieldGroup} from "../utils/FormUtils";
 

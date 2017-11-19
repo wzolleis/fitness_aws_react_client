@@ -8,6 +8,7 @@ import "./App.css";
 import {userHasAuthenticated} from "./actions/UserActions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 class App extends Component {
     userHasAuthenticated = authenticated => {

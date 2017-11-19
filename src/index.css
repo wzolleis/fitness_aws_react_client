@@ -32,3 +32,7 @@ input[type=file] {
         transform: scale(1) rotate(360deg);
     }
 }
+
+.buttons {
+    margin-top: 15px;
+}

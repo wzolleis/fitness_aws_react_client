@@ -12,7 +12,6 @@ import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import './PlanListItem.css'
 
 
 export type PlanListItemProps = FormProps & {
@@ -116,7 +115,6 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         };
 
         return (
-
             <BootstrapTable striped hover version='4' data={exerciseTableData} selectRow={selectRowProp}
                             options={options}>
                 <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>

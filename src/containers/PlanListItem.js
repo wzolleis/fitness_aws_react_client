@@ -64,25 +64,12 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         event.preventDefault();
 
         try {
-            this.props.savePlan(
-                this.props.selectedPlan
-            );
+            this.props.savePlan(this.props.selectedPlan);
             this.props.history.push('/plans');
         }
         catch (e) {
             alert(e);
             this.setState({isLoading: false});
-        }
-    };
-
-    isExerciseSelected: Exercise => boolean = (exercise: Exercise) => {
-        const exerciseId: ExerciseId = exercise.id;
-        if (exerciseId) {
-            const selectedExercises: Exercise[] = this.props.selectedExercises;
-            return selectedExercises.includes(exerciseId);
-        }
-        else {
-            return false;
         }
     };
 

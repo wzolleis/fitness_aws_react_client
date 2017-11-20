@@ -3,12 +3,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchPlans} from "../actions/PlanActions";
 import {createTraining, startTraining, fetchTrainings} from "../actions/TrainingActions";
-import type {Plan, PlanState, State, Training, Trainings, TrainingState} from "../types/index";
-import {Button, ListGroup, ListGroupItem, MenuItem, SplitButton} from "react-bootstrap";
-import _ from 'lodash';
+import type {Plan, PlanState, State, Training, Trainings} from "../types/index";
 import {withRouter} from "react-router-dom";
-import {toDateString} from "../utils/DateUtils";
-import {findPlansWithoutTraining, isTrainingFinished, isTrainingStarted} from "../utils/TrainingUtils";
+import _ from 'lodash';
+import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 
 type TrainingListProps = {
     fetchPlans: () => void,
@@ -16,7 +14,7 @@ type TrainingListProps = {
     startTraining: (event: any, plan: Plan) => void,
     fetchPlans: () => void,
     plans: PlanState,
-    trainings: TrainingState
+    trainings: Trainings
 }
 
 class TrainingList extends Component<TrainingListProps> {
@@ -25,107 +23,31 @@ class TrainingList extends Component<TrainingListProps> {
         this.props.fetchTrainings();
     }
 
-    /**
-     * Rendering der Trainings
-     * @param trainings Alle Trainings (fuer jeden Plan gibt es ein Training)
-     */
-    renderTrainings(trainings: Trainings) {
-        const buttonStyle = {
-            margin: 5
-        };
 
-        return _.map(_.values(trainings), training => {
-            if (isTrainingFinished(training)) {
-                return <ListGroupItem header={training.name} key={training.id}>
-                    <Button onClick={event => this.startTraining(event, training)}
-                            style={buttonStyle} bsStyle="success">Start...
-                    </Button>
-                </ListGroupItem>
-            }
-            else if (isTrainingStarted(training)) {
-                return <ListGroupItem header={training.name} key={training.id}>
-                    <Button onClick={event => this.continueTraining(event, training)}
-                            style={buttonStyle} bsStyle="primary">Continue...
-                    </Button>
-                </ListGroupItem>
-            }
-            else {
-                return null;
-            }
-        });
-    }
-
-
-    /**
-     * Erzeugt ein MenuItem fuer einen Plan
-     * @param plansWithoutTraining alle Plaene ohne Training
-     */
-    renderCreateTrainingWithPlan(plansWithoutTraining: PlanState) {
-        return _.map(plansWithoutTraining, plan => {
-            return <MenuItem onClick={event => this.createTraining(event, plan)} eventKey={plan.id} key={plan.id}>
-                {plan.name}
-            </MenuItem>
-        });
-    }
-
-    /**
-     * DropDown zum Erzeugen eines Trainings fuer einen Plan
-     * @param plans Die TrainingsPlaene
-     * @returns Die Komponente zum Erzeugen eines Trainings (DropDown)
-     */
-    renderCreateTrainingForPlan(plans: PlanState) {
-        const plansWithoutTraining: Plan[] = findPlansWithoutTraining(plans, this.props.trainings.trainings);
-
-        if (plansWithoutTraining && plansWithoutTraining.length > 0) {
-            return <div>
-                <SplitButton bsStyle='primary' title='Create Training' key='create-training' id='create-training'>
-                    {this.renderCreateTrainingWithPlan(plansWithoutTraining)}
-                </SplitButton>
-            </div>
-        }
-        return null;
-    }
-
+    renderTrainings = (trainings: Trainings) => {
+        const trainingItems: Training[] = _.values(trainings);
+        return (
+            <BootstrapTable striped hover version='4' data={trainingItems}>
+                <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField='createdAt'>Start</TableHeaderColumn>
+                <TableHeaderColumn dataField='finishedAt'>Beendet</TableHeaderColumn>
+            </BootstrapTable>
+        )
+    };
 
     render() {
-        return (<div>
-            <ListGroup>
-                {this.renderTrainings(this.props.trainings.trainings)}
-            </ListGroup>
-            {this.renderCreateTrainingForPlan(this.props.plans)}
-        </div>)
-    }
-
-    createTraining(event, plan: Plan) {
-        if (event) {
-            event.preventDefault();
-            this.props.createTraining(plan);
-            this.props.history.push("/");
-        }
-    }
-
-    startTraining(event, training: Training) {
-        if (event) {
-            event.preventDefault();
-            const now = new Date();
-            console.log('now: ', toDateString(now));
-            this.props.startTraining(training);
-            this.props.history.push(`/trainings/${training.id}`);
-        }
-    }
-
-    continueTraining(event, training: Training) {
-        if (event) {
-            event.preventDefault();
-            console.log('continue training: ', training);
-        }
+        return (
+            <div>
+                {this.renderTrainings(this.props.trainings)}
+            </div>
+        )
     }
 }
 
 function mapStateToProps(state: State) {
     return {
         plans: state.plans,
-        trainings: state.training
+        trainings: state.training.trainings
     }
 }
 

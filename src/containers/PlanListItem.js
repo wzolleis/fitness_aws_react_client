@@ -87,6 +87,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
         const selectedTableData: ExerciseTableData[] = _.filter(exerciseTableData, exercise => {
             return exercise.selected === true
         });
+        const sortedTableData: ExerciseTableData[] = _.orderBy(exerciseTableData, 'index');
 
         // Geraetenummer ist der Key in der Excercise-Tabelle
         const selectedDeviceNumbers: number[] = _.map(selectedTableData, 'device');
@@ -102,13 +103,18 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
             onRowClick: this.updateExerciseSelection
         };
 
+        const col1: string = 'hidden-sm hidden-xs ';
+        const col2: string = 'col-lg-5 col-md-5 col-sm-5';
+        const col3: string = 'col-lg-5 col-md-6 col-sm-6';
+
         return (
-            <BootstrapTable striped hover version='4' data={exerciseTableData} selectRow={selectRowProp}
-                            options={options}>
-                <TableHeaderColumn dataSort={true} dataField='index'>Index</TableHeaderColumn>
-                <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-                <TableHeaderColumn isKey dataField='device'>Gerätenummer</TableHeaderColumn>
-                <TableHeaderColumn dataField='weight'>Gewicht</TableHeaderColumn>
+            <BootstrapTable striped hover version='4' data={sortedTableData} selectRow={selectRowProp}
+                            options={options} condensed>
+                <TableHeaderColumn className={col1} columnClassName={col1} isKey
+                                   dataField='device'>Gerätenummer</TableHeaderColumn>
+                <TableHeaderColumn className={col2} columnClassName={col2} dataField='name'>Name</TableHeaderColumn>
+                <TableHeaderColumn className={col3} columnClassName={col3}
+                                   dataField='weight'>Gewicht</TableHeaderColumn>
             </BootstrapTable>
         );
     };

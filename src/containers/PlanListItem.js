@@ -103,7 +103,7 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
             onRowClick: this.updateExerciseSelection
         };
 
-        const col1: string = 'col-lg-2 col-md-1 hidden-sm hidden-xs ';
+        const col1: string = 'd-none d-sm-block';
         const col2: string = 'col-lg-5 col-md-7 col-sm-8 col-xs-8';
         const col3: string = 'col-lg-5 col-md-4 col-sm-4 col-xs-4';
 

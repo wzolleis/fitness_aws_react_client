@@ -1,3 +1,4 @@
+// @flow weak
 import {connect} from 'react-redux';
 import React, {Component} from 'react';
 
@@ -22,7 +23,7 @@ class PlanList extends Component<PlanListProps> {
         });
 
         if (trainingToday.length > 0) {
-            return trainingToday[0]
+            return trainingToday[0];
         }
         else {
             return null;
@@ -38,9 +39,12 @@ class PlanList extends Component<PlanListProps> {
         if (trainingToday === null) {
             this.props.createTraining(plan);
             this.props.fetchTrainings();
+            this.props.history.push('/trainings');
         }
-
-
+        else {
+            const path = '/trainings/' + trainingToday.id;
+            this.props.history.push(path);
+        }
     };
 
     componentDidMount() {

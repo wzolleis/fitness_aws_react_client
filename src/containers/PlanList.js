@@ -5,22 +5,47 @@ import {fetchPlans} from "../actions/PlanActions";
 import {planSelected} from "../actions/SelectionActions";
 import {withRouter} from 'react-router-dom';
 import * as _ from "lodash";
-import type {Plan} from "../types/index";
+import type {Plan, PlanId, Training, Trainings} from "../types/index";
 import {Button, Col, Grid, Row, Well} from "react-bootstrap";
+import {createTraining, fetchTrainings} from "../actions/TrainingActions";
+import {nowToDateString} from "../utils/DateUtils";
 
+type PlanListProps = {
+    plans: Plan[],
+    trainings: Trainings
+}
 
-class PlanList extends Component {
-    componentDidMount() {
-        this.props.fetchPlans();
-    }
+class PlanList extends Component<PlanListProps> {
+    findTrainingForDate = (myDate: string, planId: PlanId): Training => {
+        const trainingToday: Training[] = _.filter(this.props.trainings, t => {
+            return t.plan === planId && t.createdAt === myDate
+        });
+
+        if (trainingToday.length > 0) {
+            return trainingToday[0]
+        }
+        else {
+            return null;
+        }
+    };
 
     handlePlanClick = (event, plan) => {
         this.props.planSelected(plan);
         this.props.history.push(event.currentTarget.getAttribute('href'));
     };
+    startTraining = (event, plan: Plan) => {
+        const trainingToday = this.findTrainingForDate(nowToDateString(), plan.id);
+        if (trainingToday === null) {
+            this.props.createTraining(plan);
+            this.props.fetchTrainings();
+        }
 
-    startTraining = (event, plan) => {
 
+    };
+
+    componentDidMount() {
+        this.props.fetchPlans();
+        this.props.fetchTrainings();
     }
 
     mapPlanToComponent = (plan: Plan) => {
@@ -85,8 +110,15 @@ class PlanList extends Component {
     }
 }
 
-function mapStateToProps({plans}) {
-    return {plans};
+function mapStateToProps(state) {
+    const {plans} = state;
+    const trainings = state.training.trainings;
+    return {plans, trainings};
 }
 
-export default withRouter(connect(mapStateToProps, {fetchPlans, planSelected})(PlanList))
+export default withRouter(connect(mapStateToProps, {
+    fetchPlans,
+    fetchTrainings,
+    createTraining,
+    planSelected
+})(PlanList))

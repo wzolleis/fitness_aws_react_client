@@ -11,7 +11,8 @@ import {fetchPlan, savePlan, updateExerciseSelection} from '../actions/PlanActio
 import LoaderButton from "../components/LoaderButton";
 import type {FormProps} from 'redux-form';
 import type {ExerciseId, PlanId} from "../types/index";
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import ExerciseTable from "../components/ExerciseTable";
+import {calculateExerciseSelection} from "../utils/PlanSelectionUtils";
 
 
 export type PlanListItemProps = FormProps & {
@@ -76,46 +77,28 @@ class PlanListItem extends Component<PlanListItemProps, PlanListItemState> {
 
     // FlowFixMe - event-type ist unbekannt
     updateExerciseSelection = (row) => {
-        const id: ExerciseId = row.id;
+        const exerciseId: ExerciseId = row.id;
         const planId: PlanId = this.props.match.params.id;
-        console.log('update sel: ', id);
-        this.props.updateExerciseSelection(planId, id);
+
+        const exercises: ExerciseId[] = this.props.selectedPlan.exercises;
+        const updatedExercises = calculateExerciseSelection(planId, exerciseId, exercises);
+
+        this.props.updateExerciseSelection(planId, exerciseId);
+
+        this.props.blur('exercises', updatedExercises);
     };
 
     renderExerciseTable = () => {
-        const exerciseTableData: ExerciseTableData[] = this.buildExerciseTableData(this.props.exercises);
-        const selectedTableData: ExerciseTableData[] = _.filter(exerciseTableData, exercise => {
-            return exercise.selected === true
-        });
-        const sortedTableData: ExerciseTableData[] = _.orderBy(exerciseTableData, 'index');
-
-        // Geraetenummer ist der Key in der Excercise-Tabelle
-        const selectedDeviceNumbers: number[] = _.map(selectedTableData, 'device');
-
         const selectRowProp = {
-            mode: 'checkbox',
-            clickToSelect: true,  // enable click to select
-            selected: selectedDeviceNumbers,
-            onSelect: this.updateExerciseSelection,
+            onSelect: this.updateExerciseSelection
         };
 
         const options = {
             onRowClick: this.updateExerciseSelection
         };
 
-        const col1: string = 'd-none d-sm-block';
-        const col2: string = 'col-lg-5 col-md-7 col-sm-8 col-xs-8';
-        const col3: string = 'col-lg-5 col-md-4 col-sm-4 col-xs-4';
-
         return (
-            <BootstrapTable striped hover version='4' data={sortedTableData} selectRow={selectRowProp}
-                            options={options} condensed>
-                <TableHeaderColumn className={col1} columnClassName={col1} isKey
-                                   dataField='device'>Gerätenummer</TableHeaderColumn>
-                <TableHeaderColumn className={col2} columnClassName={col2} dataField='name'>Name</TableHeaderColumn>
-                <TableHeaderColumn className={col3} columnClassName={col3}
-                                   dataField='weight'>Gewicht</TableHeaderColumn>
-            </BootstrapTable>
+            <ExerciseTable options={options} selectedRowProp={selectRowProp} plan={this.props.selectedPlan}/>
         );
     };
 

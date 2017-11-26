@@ -1,8 +1,9 @@
 // @flow
-import {FETCH_PLAN, FETCH_PLANS, PLAN_SAVED, UPDATE_EXERCISE_SELECTION} from "../actions/PlanActions";
+import {FETCH_PLAN, FETCH_PLANS, UPDATE_EXERCISE_SELECTION} from "../actions/PlanActions";
 import type {PlanState, Action} from '../types';
 import _ from 'lodash';
 import type {ExerciseId} from "../types/index";
+import {calculateExerciseSelection} from "../utils/PlanSelectionUtils";
 
 const initialState: PlanState = {};
 
@@ -18,22 +19,11 @@ export const planReducer = (state: PlanState = initialState, action: Action): Pl
             const {planId, exerciseId} = action.payload;
             const plan = state[planId];
             const exercises: ExerciseId[] = plan.exercises;
-            let updatedExercises;
-            if (exercises.includes(exerciseId)) {
-                // exercise aus der Selektion rausnehmen
-                updatedExercises = _.filter(exercises, exercise => exercise !== exerciseId);
-            }
-            else {
-                // exercise in die Selektion einfuegen
-                updatedExercises = _.concat(exercises, exerciseId);
-
-            }
+            const updatedExercises = calculateExerciseSelection(planId, exerciseId, exercises);
             const updatedPlan = {...plan, exercises: updatedExercises};
             return {
                 ...state, [planId]: updatedPlan
             };
-        case PLAN_SAVED:
-            return state;
         default:
             return state;
     }

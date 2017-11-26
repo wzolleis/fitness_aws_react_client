@@ -63,7 +63,7 @@ class ExerciseTable extends Component<ExerciseTableProps> {
     buildExerciseTableData = (exercises: Exercises, exerciseIds: ExerciseId[]): ExerciseTableData[] => {
         const exerciseTableData: ExerciseTableData[] = _.map(exercises, exercise => {
             const index: number = exerciseIds.findIndex(id => id === exercise.id);
-            let selected = index >= 0;
+            const selected = index >= 0;
             return {
                 id: exercise.id,
                 index,

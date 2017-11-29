@@ -7,6 +7,7 @@ import type {Plan, PlanState, State, Training, Trainings} from "../types/index";
 import {withRouter} from "react-router-dom";
 import _ from 'lodash';
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
+import {parseDateString} from "../utils/DateUtils";
 
 type TrainingListProps = {
     fetchPlans: () => void,
@@ -29,7 +30,9 @@ class TrainingList extends Component<TrainingListProps> {
     };
 
     renderTrainings = (trainings: Trainings) => {
-        const trainingItems: Training[] = _.values(trainings);
+        const trainingItems: Training[] = _.sortBy(_.values(trainings), t => {
+            return parseDateString(t.createdAt);
+        });
         const options = {
             onRowClick: this.handleTrainingClick
         };

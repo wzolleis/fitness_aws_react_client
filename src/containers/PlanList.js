@@ -34,6 +34,7 @@ class PlanList extends Component<PlanListProps> {
         this.props.planSelected(plan);
         this.props.history.push(event.currentTarget.getAttribute('href'));
     };
+
     startTraining = (event, plan: Plan) => {
         const trainingToday = this.findTrainingForDate(nowToDateString(), plan.id);
         if (trainingToday === null) {

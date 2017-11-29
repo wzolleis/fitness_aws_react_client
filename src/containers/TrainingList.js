@@ -23,11 +23,18 @@ class TrainingList extends Component<TrainingListProps> {
         this.props.fetchTrainings();
     }
 
+    handleTrainingClick = (event, row) => {
+        const path = '/trainings/' + event.id;
+        this.props.history.push(path);
+    };
 
     renderTrainings = (trainings: Trainings) => {
         const trainingItems: Training[] = _.values(trainings);
+        const options = {
+            onRowClick: this.handleTrainingClick
+        };
         return (
-            <BootstrapTable striped hover version='4' data={trainingItems}>
+            <BootstrapTable options={options} striped hover version='4' data={trainingItems}>
                 <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
                 <TableHeaderColumn isKey dataField='createdAt'>Start</TableHeaderColumn>
                 <TableHeaderColumn dataField='finishedAt'>Beendet</TableHeaderColumn>

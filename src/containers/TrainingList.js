@@ -38,8 +38,9 @@ class TrainingList extends Component<TrainingListProps> {
         };
         return (
             <BootstrapTable options={options} striped hover version='4' data={trainingItems}>
-                <TableHeaderColumn dataField='name'>Name</TableHeaderColumn>
-                <TableHeaderColumn isKey dataField='createdAt'>Start</TableHeaderColumn>
+                <TableHeaderColumn filter={{type: 'TextFilter', delay: 1000}} dataField='name'>Name</TableHeaderColumn>
+                <TableHeaderColumn isKey filter={{type: 'TextFilter', delay: 1000}} dataSort={true}
+                                   dataField='createdAt'>Start</TableHeaderColumn>
                 <TableHeaderColumn dataField='finishedAt'>Beendet</TableHeaderColumn>
             </BootstrapTable>
         )

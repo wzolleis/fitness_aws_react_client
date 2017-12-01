@@ -13,17 +13,33 @@ type TrainingItemProps = {
 
 class TrainingItem extends Component<TrainingItemProps> {
     render() {
+        const ex: Exercise[] = this.props.trainingExercises;
         return (
-            <div>
-                {this.props.trainingExercises.map((exercise, index) => {
-                    return (<div key={exercise.id} className="card">
-                        <div className="card-header">
-                            <h4>{index + 1} - {exercise.name} - {exercise.weight}</h4>
-                        </div>
-                    </div>);
+            <div id="accordion" role="tablist">
+                {ex.map((exercise) => {
+                    return (
+                        <div key={exercise.id} className="card">
+                            <div className="card-header" role="tab" id={exercise.id}>
+                                <h2 className="mb-0">
+                                    <a data-toggle="collapse" href={'#collapse_' + exercise.id} aria-expanded="true"
+                                       aria-controls="collapseOne">
+                                        {exercise.device} - {exercise.name} - {exercise.weight}
+                                    </a>
+                                </h2>
+                            </div>
+                            <div id={'collapse_' + exercise.id} className="collapse" role="tabpanel"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#accordion">
+                                <div className="card-body">
+                                    <p>Name: {exercise.name}</p>
+                                    <p>Gerät: {exercise.device}</p>
+                                    <p>Gewicht: {exercise.weight}</p>
+                                </div>
+                            </div>
+                        </div>);
                 })}
             </div>
-        )
+        );
 
     }
 }
